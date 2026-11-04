@@ -1,0 +1,19 @@
+{
+  "hero": {
+    "articleId": "what-is-digital-marketing",
+    "badge": "Editor's Pick"
+  },
+  "featured": [
+    "what-is-digital-marketing",
+    "what-is-ai",
+    "full-stack-developer-guide",
+    "high-income-skills",
+    "benefits-of-seo"
+  ],
+  "essentialReads": [
+    "what-is-digital-marketing",
+    "what-is-ai",
+    "full-stack-developer-guide",
+    "high-income-skills"
+  ]
+}

@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Category — WsCube Tech Blog</title>
+    <meta id="page-desc" name="description" content="Browse articles by category on WsCube Tech Blog." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="assets/css/blog.css" />
+  </head>
+  <body>
+    <div style="background: var(--white); border-bottom: 1px solid var(--border); padding: 0">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="bc-sep" aria-hidden="true">›</span>
+          <span class="bc-cur" id="bc-cat">Category</span>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Category banner -->
+    <div id="cat-banner-wrap"></div>
+
+    <!-- Articles + Sidebar -->
+    <div class="container">
+      <div class="cat-page-layout">
+        <!-- Main -->
+        <main id="cat-main" aria-label="Articles">
+          <div id="filter-bar" class="filter-bar" role="toolbar" aria-label="Filter and sort articles"></div>
+          <div id="articles-grid" class="articles-grid-2" aria-live="polite" aria-label="Article listing"></div>
+          <div id="pagination" class="pagination" role="navigation" aria-label="Page navigation"></div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar" aria-label="Sidebar">
+          <!-- Populated by JS -->
+        </aside>
+      </div>
+    </div>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/render.js"></script>
+    <script src="assets/js/search.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        const PER_PAGE = 6;
+        let state = { page: 1, tag: 'all', sort: 'newest', articles: [], filtered: [], cat: null };
+
+        function getParam(k) {
+          return new URLSearchParams(location.search).get(k);
+        }
+
+        /* ---- Banner ---- */
+        function renderBanner() {
+          const c = state.cat;
+          const wrap = document.getElementById('cat-banner-wrap');
+          if (!wrap || !c) return;
+          const catIcon = ICONS[c.id] || ICONS['grid'];
+          wrap.innerHTML = `<div class="cat-banner" style="background:${c.color};">
+      <div class="container">
+        <div class="cat-banner-in">
+          <div class="cat-banner-icon">${catIcon}</div>
+          <div>
+            <h1 class="cat-banner-name">${escapeHtml(c.name)}</h1>
+            <p class="cat-banner-desc">${escapeHtml(c.description)}</p>
+            <span class="cat-count-badge">${state.articles.length} Articles</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+        }
+
+        /* ---- Filter bar ---- */
+        function renderFilterBar() {
+          const el = document.getElementById('filter-bar');
+          if (!el) return;
+          const tags = new Set(['all']);
+          state.articles.forEach((a) => (a.tags || []).forEach((t) => tags.add(t)));
+          const tagBtns = Array.from(tags)
+            .map(
+              (t) =>
+                `<button class="filter-tag${t === state.tag ? ' active' : ''}"
+        onclick="setState('tag','${escapeHtml(t)}')"
+        aria-pressed="${t === state.tag}"
+      >${t === 'all' ? 'All' : escapeHtml(t)}</button>`,
+            )
+            .join('');
+          const sortSel = `<select class="filter-sort" id="filter-sort" aria-label="Sort articles" onchange="setState('sort',this.value)">
+      <option value="newest"${state.sort === 'newest' ? ' selected' : ''}>Newest First</option>
+      <option value="oldest"${state.sort === 'oldest' ? ' selected' : ''}>Oldest First</option>
+      <option value="reading"${state.sort === 'reading' ? ' selected' : ''}>Reading Time</option>
+    </select>`;
+          el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;width:100%;">${tagBtns}${sortSel}</div>`;
+        }
+
+        /* ---- Apply filters & sort ---- */
+        function applyFilters() {
+          let r = [...state.articles];
+          if (state.tag !== 'all') r = r.filter((a) => (a.tags || []).includes(state.tag));
+          if (state.sort === 'newest') r.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
+          if (state.sort === 'oldest') r.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate));
+          if (state.sort === 'reading') r.sort((a, b) => (a.readingTime || 0) - (b.readingTime || 0));
+          state.filtered = r;
+          state.page = 1;
+        }
+
+        /* ---- Render articles ---- */
+        function renderArticles() {
+          const el = document.getElementById('articles-grid');
+          if (!el) return;
+          const start = (state.page - 1) * PER_PAGE;
+          const slice = state.filtered.slice(start, start + PER_PAGE);
+          if (!slice.length) {
+            el.innerHTML = `<div style="grid-column:1/-1;padding:48px 0;text-align:center;color:var(--gray-400);">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:.4;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <strong style="display:block;color:var(--gray-600);margin-bottom:4px;">No articles found</strong>
+        Try a different filter or tag.
+      </div>`;
+            return;
+          }
+          el.innerHTML = slice.map((a) => renderArticleCard(a)).join('');
+        }
+
+        /* ---- Pagination ---- */
+        function renderPagination() {
+          const el = document.getElementById('pagination');
+          if (!el) return;
+          const total = Math.ceil(state.filtered.length / PER_PAGE);
+          if (total <= 1) {
+            el.innerHTML = '';
+            return;
+          }
+          let html = `<button class="pg-btn" onclick="goPage(${state.page - 1})" ${state.page === 1 ? 'disabled' : ''} aria-label="Previous">‹</button>`;
+          for (let i = 1; i <= total; i++) {
+            if (i === 1 || i === total || Math.abs(i - state.page) <= 1) {
+              html += `<button class="pg-btn${i === state.page ? ' active' : ''}" onclick="goPage(${i})" aria-label="Page ${i}" ${i === state.page ? 'aria-current="page"' : ''}>${i}</button>`;
+            } else if (Math.abs(i - state.page) === 2) {
+              html += `<span style="padding:0 4px;color:var(--gray-400);">…</span>`;
+            }
+          }
+          html += `<button class="pg-btn" onclick="goPage(${state.page + 1})" ${state.page === total ? 'disabled' : ''} aria-label="Next">›</button>`;
+          el.innerHTML = html;
+        }
+
+        /* ---- Sidebar ---- */
+        function renderSidebar() {
+          const el = document.getElementById('sidebar');
+          if (!el) return;
+          const popular = [...state.articles]
+            .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
+            .slice(0, 5);
+
+          const popularHtml = popular
+            .map(
+              (a, i) => `
+      <a href="article.html?id=${escapeHtml(a.id)}" class="pop-item">
+        <span class="pop-num">${String(i + 1).padStart(2, '0')}</span>
+        <div>
+          <div class="pop-title">${escapeHtml(a.title)}</div>
+          <div class="pop-meta">${formatDate(a.publishedDate)}</div>
+        </div>
+      </a>`,
+            )
+            .join('');
+
+          const catListHtml = getCategories()
+            .map(
+              (c) => `
+      <a href="category.html?id=${escapeHtml(c.id)}"
+         class="cat-li${state.cat && c.id === state.cat.id ? ' active' : ''}">
+        <span class="cat-li-name">
+          <span style="color:${c.color}">${ICONS[c.id] || ''}</span>
+          ${escapeHtml(c.name)}
+        </span>
+        <span class="cat-li-count">${c.articleCount}</span>
+      </a>`,
+            )
+            .join('');
+
+          el.innerHTML = `
+      <div class="sw">
+        <h3 class="sw-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Search Articles
+        </h3>
+        <div class="sb-search">
+          <input type="search" id="sb-search-input" placeholder="Search..." aria-label="Search articles" />
+          <button id="sb-search-btn" aria-label="Search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="sw">
+        <h3 class="sw-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
+          Popular in Category
+        </h3>
+        <div class="pop-list">${popularHtml}</div>
+      </div>
+      <div class="sw">
+        <h3 class="sw-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Categories
+        </h3>
+        <div class="cat-list">${catListHtml}</div>
+      </div>
+      <div class="sb-nwl">
+        <div class="sb-nwl-title">Get Weekly Insights</div>
+        <p class="sb-nwl-sub">Join 50,000+ learners who get our best articles every week.</p>
+        <a href="index.html#newsletter" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.12);font-size:.75rem;padding:8px 18px;">Subscribe Free</a>
+      </div>`;
+
+          // Wire sidebar search
+          const sbInput = document.getElementById('sb-search-input');
+          const sbBtn = document.getElementById('sb-search-btn');
+          if (sbBtn && sbInput) {
+            const go = () => {
+              const q = sbInput.value.trim();
+              if (q) {
+                sessionStorage.setItem('wscube_q', q);
+                location.href = 'index.html';
+              }
+            };
+            sbBtn.addEventListener('click', go);
+            sbInput.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') go();
+            });
+          }
+        }
+
+        /* ---- Global state setter (called from inline onclick) ---- */
+        window.setState = function (key, val) {
+          state[key] = val;
+          applyFilters();
+          renderFilterBar();
+          renderArticles();
+          renderPagination();
+        };
+        window.goPage = function (n) {
+          const total = Math.ceil(state.filtered.length / PER_PAGE);
+          if (n < 1 || n > total) return;
+          state.page = n;
+          renderArticles();
+          renderPagination();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        /* ---- Boot ---- */
+        function boot() {
+          const catId = getParam('id');
+          const cat = catId ? getCategoryById(catId) : getCategories()[0];
+          if (!cat) {
+            document.body.innerHTML =
+              '<div class="container" style="padding:80px 0;text-align:center;"><h1>Category not found</h1><a href="index.html" class="btn btn-primary" style="margin-top:20px;">← Back Home</a></div>';
+            return;
+          }
+          state.cat = cat;
+          state.articles = getArticlesByCategory(cat.id).sort(
+            (a, b) => new Date(b.publishedDate) - new Date(a.publishedDate),
+          );
+
+          document.title = `${cat.name} Articles — WsCube Tech Blog`;
+          document.getElementById('page-desc').content = cat.description;
+          document.getElementById('bc-cat').textContent = cat.name;
+
+          applyFilters();
+          renderBanner();
+          renderFilterBar();
+          renderArticles();
+          renderPagination();
+          renderSidebar();
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', boot);
+        } else {
+          boot();
+        }
+      })();
+    </script>
+  </body>
+</html>

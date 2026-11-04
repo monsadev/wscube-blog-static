@@ -1,0 +1,386 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Article — WsCube Tech Blog</title>
+    <meta id="page-desc" name="description" content="Read in-depth articles on WsCube Tech Blog." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="assets/css/blog.css" />
+  </head>
+  <body>
+    <!-- Reading progress bar -->
+    <div
+      class="reading-bar"
+      id="reading-bar"
+      role="progressbar"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+      aria-label="Reading progress"
+    ></div>
+
+    <!-- Article header (populated by JS) -->
+    <div id="article-header-wrap"></div>
+
+    <!-- Featured image + body (populated by JS) -->
+    <div class="container" id="article-main"></div>
+
+    <!-- Related articles -->
+    <section class="related-section" id="related-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="section-label" aria-hidden="true">Read Next</span>
+            <h2 class="section-title">Related Articles</h2>
+          </div>
+        </div>
+        <div id="related-grid" class="related-grid" aria-label="Related articles"></div>
+      </div>
+    </section>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/render.js"></script>
+    <script src="assets/js/search.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        function getParam(k) {
+          return new URLSearchParams(location.search).get(k);
+        }
+
+        /* ---- Build Table of Contents from content blocks ---- */
+        function buildTOC(blocks) {
+          const headings = (blocks || []).filter((b) => b.type === 'heading' && (b.level === 2 || b.level === 3));
+          if (!headings.length) return '';
+          const items = headings
+            .map((h) => {
+              const id = slugify(h.text || '');
+              const cls = h.level === 3 ? ' h3' : '';
+              return `<a href="#${id}" class="toc-link${cls}" data-toc="${id}">${escapeHtml(h.text)}</a>`;
+            })
+            .join('');
+          return `<div class="toc-widget">
+      <div class="toc-hd">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        Table of Contents
+      </div>
+      <nav class="toc-list" aria-label="Article sections">${items}</nav>
+    </div>`;
+        }
+
+        /* ---- Related sidebar ---- */
+        function buildRelatedSidebar(articleId, catId) {
+          const related = getArticlesByCategory(catId)
+            .filter((a) => a.id !== articleId)
+            .slice(0, 4);
+          if (!related.length) return '';
+          const items = related
+            .map(
+              (a) => `
+      <a href="article.html?id=${escapeHtml(a.id)}" class="pop-item">
+        <div class="pop-title">${escapeHtml(a.title)}</div>
+        <div class="pop-meta">${formatDate(a.publishedDate)}</div>
+      </a>`,
+            )
+            .join('');
+          return `<div class="sw">
+      <h3 class="sw-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+        Related Articles
+      </h3>
+      <div class="popular-list">${items}</div>
+    </div>`;
+        }
+
+        /* ---- Popular sidebar ---- */
+        function buildPopularSidebar(excludeId) {
+          const popular = getTrending(5).filter((a) => a.id !== excludeId);
+          const items = popular
+            .map(
+              (a, i) => `
+      <a href="article.html?id=${escapeHtml(a.id)}" class="pop-item">
+        <span class="pop-num">${String(i + 1).padStart(2, '0')}</span>
+        <div>
+          <div class="pop-title">${escapeHtml(a.title)}</div>
+          <div class="pop-meta">${formatDate(a.publishedDate)}</div>
+        </div>
+      </a>`,
+            )
+            .join('');
+          return `<div class="sw">
+      <h3 class="sw-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
+        Popular Posts
+      </h3>
+      <div class="popular-list">${items}</div>
+    </div>`;
+        }
+
+        function buildShareBtns() {
+          return `<div class="share-btns" aria-label="Share this article">
+      <a id="share-tw" href="#" class="share-btn sh-tw" target="_blank" rel="noopener" aria-label="Share on Twitter">
+        ${ICONS['twitter']} Twitter
+      </a>
+      <a id="share-li" href="#" class="share-btn sh-li" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+        ${ICONS['linkedin']} LinkedIn
+      </a>
+      <button id="share-copy" class="share-btn sh-cp" aria-label="Copy link">
+        ${ICONS['link']} Copy Link
+      </button>
+    </div>`;
+        }
+
+        function wireShareBtns(article) {
+          const url = encodeURIComponent(window.location.href);
+          const title = encodeURIComponent(article.title);
+          const tw = document.getElementById('share-tw');
+          const li = document.getElementById('share-li');
+          const cp = document.getElementById('share-copy');
+          if (tw) tw.href = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+          if (li) li.href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+          if (cp) {
+            cp.addEventListener('click', function () {
+              navigator.clipboard
+                .writeText(window.location.href)
+                .then(() => {
+                  this.classList.add('copied');
+                  this.innerHTML = ICONS['check'] + ' Copied!';
+                  setTimeout(() => {
+                    this.classList.remove('copied');
+                    this.innerHTML = ICONS['link'] + ' Copy Link';
+                  }, 2000);
+                })
+                .catch(() => {
+                  const ta = document.createElement('textarea');
+                  ta.value = window.location.href;
+                  document.body.appendChild(ta);
+                  ta.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(ta);
+                });
+            });
+          }
+          // Wire the bottom share buttons too
+          const tw2 = document.getElementById('share-tw2');
+          const li2 = document.getElementById('share-li2');
+          const cp2 = document.getElementById('share-copy2');
+          if (tw2) tw2.href = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+          if (li2) li2.href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+          if (cp2) {
+            cp2.addEventListener('click', function () {
+              navigator.clipboard.writeText(window.location.href).then(() => {
+                this.classList.add('copied');
+                this.innerHTML = ICONS['check'] + ' Copied!';
+                setTimeout(() => {
+                  this.classList.remove('copied');
+                  this.innerHTML = ICONS['link'] + ' Copy Link';
+                }, 2000);
+              });
+            });
+          }
+        }
+
+        /* ---- TOC scroll spy ---- */
+        function initTOCSpy() {
+          const links = document.querySelectorAll('.toc-link[data-toc]');
+          const headings = document.querySelectorAll('.article-body h2[id], .article-body h3[id]');
+          if (!links.length || !headings.length) return;
+
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  links.forEach((l) => l.classList.remove('active'));
+                  const active = document.querySelector(`.toc-link[data-toc="${entry.target.id}"]`);
+                  if (active) active.classList.add('active');
+                }
+              });
+            },
+            { rootMargin: '-60px 0px -65% 0px' },
+          );
+
+          headings.forEach((h) => observer.observe(h));
+
+          // Smooth scroll on click
+          links.forEach((link) => {
+            link.addEventListener('click', function (e) {
+              e.preventDefault();
+              const id = this.getAttribute('href').slice(1);
+              const el = document.getElementById(id);
+              if (el) {
+                const y = el.getBoundingClientRect().top + window.scrollY - 80;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+              }
+            });
+          });
+        }
+
+        /* ---- Reading progress ---- */
+        function initReadingProgress() {
+          const bar = document.getElementById('reading-bar');
+          const body = document.getElementById('article-main');
+          if (!bar || !body) return;
+          function update() {
+            const rect = body.getBoundingClientRect();
+            const height = body.offsetHeight;
+            const scroll = -rect.top;
+            const max = height - window.innerHeight;
+            const pct = max > 0 ? Math.min(100, Math.max(0, (scroll / max) * 100)) : 0;
+            bar.style.width = pct + '%';
+            bar.setAttribute('aria-valuenow', Math.round(pct));
+          }
+          window.addEventListener('scroll', update, { passive: true });
+        }
+
+        /* ---- Main render ---- */
+        function renderArticlePage() {
+          const id = getParam('id');
+          const article = id ? getArticleById(id) : null;
+
+          if (!article) {
+            document.body.innerHTML = `<div class="container" style="padding:80px 20px;text-align:center;">
+        <h1 style="font-size:2rem;margin-bottom:12px;">Article Not Found</h1>
+        <p style="color:var(--gray-500);margin-bottom:24px;">The article you're looking for doesn't exist.</p>
+        <a href="index.html" class="btn btn-primary">← Back to Blog</a>
+      </div>`;
+            return;
+          }
+
+          const cat = getCategoryForArticle(article);
+          const auth = getAuthorForArticle(article);
+          const catColor = cat ? cat.color : '#194cff';
+          const catBg = cat ? cat.bgColor : '#e8edff';
+          const catName = cat ? cat.name : '';
+          const catId = cat ? cat.id : '';
+
+          /* Meta */
+          document.title = `${article.title} — WsCube Tech Blog`;
+          document.getElementById('page-desc').content = article.excerpt || '';
+
+          /* ---- Header ---- */
+          const headerWrap = document.getElementById('article-header-wrap');
+          if (headerWrap) {
+            headerWrap.innerHTML = `<div class="article-header">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="bc-sep" aria-hidden="true">›</span>
+            <a href="category.html?id=${escapeHtml(catId)}">${escapeHtml(catName)}</a>
+            <span class="bc-sep" aria-hidden="true">›</span>
+            <span class="bc-cur">${escapeHtml(article.title.length > 48 ? article.title.slice(0, 46) + '…' : article.title)}</span>
+          </nav>
+          <a href="category.html?id=${escapeHtml(catId)}" class="art-cat-badge" style="background:${catBg};color:${catColor};">${escapeHtml(catName)}</a>
+          <h1 class="article-title">${escapeHtml(article.title)}</h1>
+          <p class="article-excerpt">${escapeHtml(article.excerpt)}</p>
+          <div class="art-meta">
+            <div class="art-author" aria-label="Author">
+              <img src="${escapeHtml(auth ? auth.avatar : 'assets/images/authors/default.svg')}"
+                   alt="${escapeHtml(auth ? auth.name : '')}"
+                   loading="lazy"
+                   onerror="this.src='assets/images/authors/default.svg'" />
+              <div>
+                <div class="art-author-name">${escapeHtml(auth ? auth.name : '')}</div>
+                <div class="art-author-role">${escapeHtml(auth ? auth.role : '')}</div>
+              </div>
+            </div>
+            <div class="art-sep" aria-hidden="true"></div>
+            <div class="art-meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>${formatDate(article.publishedDate)}</span>
+            </div>
+            <div class="art-sep" aria-hidden="true"></div>
+            <div class="art-meta-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>${article.readingTime} min read</span>
+            </div>
+            ${buildShareBtns()}
+          </div>
+        </div>
+      </div>`;
+          }
+
+          /* ---- Featured image + body ---- */
+          const main = document.getElementById('article-main');
+          if (!main) return;
+
+          const tags = (article.tags || [])
+            .map((t) => `<a href="category.html?id=${escapeHtml(catId)}" class="tag-pill">${escapeHtml(t)}</a>`)
+            .join('');
+
+          const authorBio = auth
+            ? `<div class="author-bio">
+      <img src="${escapeHtml(auth.avatar)}" alt="${escapeHtml(auth.name)}" loading="lazy" onerror="this.src='assets/images/authors/default.svg'" />
+      <div>
+        <div class="ab-label">Written by</div>
+        <div class="ab-name">${escapeHtml(auth.name)}</div>
+        <div class="ab-role">${escapeHtml(auth.role)}</div>
+        <p class="ab-text">${escapeHtml(auth.bio)}</p>
+      </div>
+    </div>`
+            : '';
+
+          const shareBtmBtns = `<div class="share-bottom">
+      <span class="share-bottom-lbl">Share this article:</span>
+      <a id="share-tw2" href="#" class="share-btn sh-tw" target="_blank" rel="noopener">${ICONS['twitter']} Twitter</a>
+      <a id="share-li2" href="#" class="share-btn sh-li" target="_blank" rel="noopener">${ICONS['linkedin']} LinkedIn</a>
+      <button id="share-copy2" class="share-btn sh-cp">${ICONS['link']} Copy Link</button>
+    </div>`;
+
+          main.innerHTML = `
+      <img
+        class="art-feat-img"
+        src="${escapeHtml(article.image)}"
+        alt="${escapeHtml(article.imageAlt || article.title)}"
+        loading="eager"
+        onerror="this.style.display='none'"
+      />
+      <div class="article-layout">
+        <article class="article-body">
+          ${renderArticleContent(article.content)}
+          <div class="art-tags">
+            <span class="art-tags-lbl">${ICONS['tag']} Tags:</span>
+            ${tags}
+          </div>
+          ${authorBio}
+          ${shareBtmBtns}
+        </article>
+        <aside class="article-sidebar" aria-label="Article sidebar">
+          ${buildTOC(article.content)}
+          ${buildRelatedSidebar(article.id, article.category)}
+          ${buildPopularSidebar(article.id)}
+        </aside>
+      </div>`;
+
+          /* ---- Related articles section ---- */
+          const relGrid = document.getElementById('related-grid');
+          if (relGrid) {
+            const related = getArticlesByCategory(article.category)
+              .filter((a) => a.id !== article.id)
+              .slice(0, 3);
+            if (related.length) {
+              relGrid.innerHTML = related.map((a) => renderArticleCard(a)).join('');
+            } else {
+              document.getElementById('related-section').style.display = 'none';
+            }
+          }
+
+          /* ---- Wire up interactions ---- */
+          wireShareBtns(article);
+          initReadingProgress();
+          requestAnimationFrame(() => {
+            initTOCSpy();
+          });
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', renderArticlePage);
+        } else {
+          renderArticlePage();
+        }
+      })();
+    </script>
+  </body>
+</html>

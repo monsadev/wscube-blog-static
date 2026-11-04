@@ -1,0 +1,62 @@
+[
+  {
+    "id": "digital-marketing",
+    "name": "Digital Marketing",
+    "slug": "digital-marketing",
+    "description": "Learn digital marketing strategies, tools, and techniques to grow your online presence and business.",
+    "color": "#194cff",
+    "bgColor": "#e8edff",
+    "icon": "📈",
+    "articleCount": 6
+  },
+  {
+    "id": "seo",
+    "name": "SEO",
+    "slug": "seo",
+    "description": "Master search engine optimization to drive organic traffic and improve your website rankings.",
+    "color": "#fc9c03",
+    "bgColor": "#fff5e6",
+    "icon": "🔍",
+    "articleCount": 4
+  },
+  {
+    "id": "web-development",
+    "name": "Web Development",
+    "slug": "web-development",
+    "description": "Explore web development technologies, frameworks, and best practices for building modern websites.",
+    "color": "#22bb33",
+    "bgColor": "#dbf5f0",
+    "icon": "💻",
+    "articleCount": 5
+  },
+  {
+    "id": "artificial-intelligence",
+    "name": "Artificial Intelligence",
+    "slug": "artificial-intelligence",
+    "description": "Discover how AI is transforming industries and learn the skills needed for an AI-powered future.",
+    "color": "#2d0095",
+    "bgColor": "#e3e0f3",
+    "icon": "🤖",
+    "articleCount": 5
+  },
+  {
+    "id": "career-guidance",
+    "name": "Career Guidance",
+    "slug": "career-guidance",
+    "description": "Get expert career advice, roadmaps and guidance to navigate your professional journey in tech.",
+    "color": "#f65555",
+    "bgColor": "#ffedea",
+    "icon": "🎯",
+    "articleCount": 4
+  },
+  {
+    "id": "interview-questions",
+    "name": "Interview Questions",
+    "slug": "interview-questions",
+    "description": "Prepare for technical interviews with curated questions and detailed answers across all domains.",
+    "color": "#4b5563",
+    "bgColor": "#f3f4f6",
+    "icon": "❓",
+    "articleCount": 3
+  }
+]

@@ -1,0 +1,62 @@
+﻿[
+  {
+    "id": "durjey-kayath",
+    "name": "Durjey Kayath",
+    "slug": "durjey-kayath",
+    "role": "Senior Content Writer",
+    "bio": "Durjey Kayath is a senior content writer specializing in digital marketing, AI, and tech. He crafts in-depth guides that help learners stay ahead in a fast-moving industry.",
+    "avatar": "assets/images/authors/durjey-kayath.svg",
+    "social": {
+      "linkedin": "#",
+      "twitter": "#"
+    }
+  },
+  {
+    "id": "mohit-kumar",
+    "name": "Mohit Kumar",
+    "slug": "mohit-kumar",
+    "role": "Technical Content Writer",
+    "bio": "Mohit Kumar writes about web development, full-stack technologies, and AI tools. His content bridges the gap between complex technical concepts and beginner understanding.",
+    "avatar": "assets/images/authors/mohit-kumar.svg",
+    "social": {
+      "linkedin": "#",
+      "twitter": "#"
+    }
+  },
+  {
+    "id": "virendra-soni",
+    "name": "Virendra Soni",
+    "slug": "virendra-soni",
+    "role": "Content Writer",
+    "bio": "Virendra Soni focuses on interview preparation content, coding tutorials, and database guides. He helps students and professionals ace their technical interviews.",
+    "avatar": "assets/images/authors/virendra-soni.svg",
+    "social": {
+      "linkedin": "#",
+      "twitter": "#"
+    }
+  },
+  {
+    "id": "ashima-jain",
+    "name": "Ashima Jain",
+    "slug": "ashima-jain",
+    "role": "Content Writer",
+    "bio": "Ashima Jain writes about web development, programming fundamentals, and tech careers. She makes technical topics accessible and engaging for all readers.",
+    "avatar": "assets/images/authors/ashima-jain.svg",
+    "social": {
+      "linkedin": "#",
+      "twitter": "#"
+    }
+  },
+  {
+    "id": "jagriti-nahata",
+    "name": "Jagriti Nahata",
+    "slug": "jagriti-nahata",
+    "role": "Career Guidance Writer",
+    "bio": "Jagriti Nahata specializes in career guidance and future skills content. She helps aspiring professionals identify the right career path in the evolving job market.",
+    "avatar": "assets/images/authors/jagriti-nahata.svg",
+    "social": {
+      "linkedin": "#",
+      "twitter": "#"
+    }
+  }
+]
