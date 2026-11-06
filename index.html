@@ -123,8 +123,40 @@
       </div>
     </section>
 
+    <!-- INTERVIEW QUESTIONS (tabs) -->
+    <section class="section section--wht iq-section" id="interview" aria-labelledby="iq-h2">
+      <div class="container">
+        <div class="iq-head">
+          <span class="sec-label">Crack the Interview</span>
+          <h2 class="sec-title" id="iq-h2">Interview Questions by Category</h2>
+          <p class="sec-sub">
+            Prepare for technical interviews with curated questions and detailed answers across all domains.
+          </p>
+        </div>
+        <div class="iq-card">
+          <div class="iq-tabs" id="iq-tabs" role="tablist" aria-label="Interview question categories"></div>
+          <div class="iq-panel" id="iq-panel" role="tabpanel" aria-live="polite"></div>
+        </div>
+        <div class="iq-cta">
+<div class="usk-card">
+          <div class="usk-left">
+            <h2 class="usk-title" id="usk-h2">Unlock Your Skills → Start Learning Today</h2>
+            <p class="usk-sub">Join thousands of learners boosting their careers with industry-ready courses.</p>
+            <button class="usk-cta" type="button" data-open-lead="Book Mentor Session">Book Mentor Session →</button>
+          </div>
+          <div class="usk-right">
+            <div class="usk-viewport">
+              <div class="usk-track" id="usk-track" aria-label="Mentors"></div>
+            </div>
+            <div class="usk-dots" id="usk-dots" role="tablist" aria-label="Mentor slides"></div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ESSENTIAL READS -->
-    <section class="section section--wht" id="essential" aria-labelledby="ess-h2">
+    <section class="section section--alt" id="essential" aria-labelledby="ess-h2">
       <div class="container">
         <div class="sec-head">
           <div>
@@ -138,48 +170,12 @@
       </div>
     </section>
 
-    <!-- UNLOCK YOUR SKILLS / START LEARNING -->
-    <section class="section usk-section" id="start-learning" aria-labelledby="usk-h2">
-      <div class="container">
-        <div class="usk-card">
-          <div class="usk-left">
-            <h2 class="usk-title" id="usk-h2">Unlock Your Skills → Start Learning Today</h2>
-            <p class="usk-sub">Join thousands of learners boosting their careers with industry-ready courses.</p>
-            <button class="usk-cta" type="button" data-open-lead="Book Mentor Session">Book Mentor Session →</button>
-          </div>
-          <div class="usk-right">
-            <div class="usk-viewport">
-              <div class="usk-track" id="usk-track" aria-label="Mentors"></div>
-            </div>
-            <div class="usk-dots" id="usk-dots" role="tablist" aria-label="Mentor slides"></div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- TRENDING POSTS -->
-    <section class="section section--alt" id="trending" aria-labelledby="trend-h2">
-      <div class="container">
-        <div class="sec-head">
-          <div>
-            <span class="sec-label">Crack the Interview</span>
-            <h2 class="sec-title" id="trend-h2">Interview Questions</h2>
-            <p class="sec-sub">
-              Prepare for technical interviews with curated questions and detailed answers across all domains.
-            </p>
-          </div>
-        </div>
-        <div id="trending-grid" class="trending-grid" aria-label="Trending articles"></div>
-        <div class="trending-more">
-          <a href="category.html" class="btn btn-outline">More Trending Reads</a>
-        </div>
-      </div>
-    </section>
 
     <!-- CATEGORY BLOCKS -->
     <section class="section section--wht" id="by-topic" aria-labelledby="topic-h2">
       <div class="container">
-        <div class="sec-head" style="margin-bottom: 44px">
+        <div class="sec-head" style="margin-bottom: 26px">
           <div>
             <span class="sec-label">Browse by Topic</span>
             <h2 class="sec-title" id="topic-h2">Explore by Category</h2>
@@ -187,13 +183,8 @@
           </div>
         </div>
         <div id="cat-blocks" class="cat-blocks" aria-label="Articles by topic"></div>
-      </div>
-    </section>
-
-    <!-- POPULAR TUTORIALS -->
-    <section class="section section--wht" id="popular-tutorials" aria-labelledby="pt-h2">
-      <div class="container">
-        <div class="pt-wrap">
+        <div class="xc-cta">
+<div class="pt-wrap">
           <div class="pt-intro">
             <span class="pt-badge" aria-hidden="true">
               <svg
@@ -219,8 +210,11 @@
           </div>
           <div class="pt-grid" id="pt-grid" role="list" aria-label="Popular tutorials"></div>
         </div>
+        </div>
       </div>
     </section>
+
+
 
     <!-- UPCOMING MASTERCLASS -->
     <section class="section mc-section" id="masterclass" aria-labelledby="mc-h2">
@@ -263,6 +257,33 @@
         </div>
         <div class="mc-viewport">
           <div class="mc-track" id="mc-track" aria-label="Masterclass listing"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAREER ROADMAP -->
+    <section class="section section--wht" id="roadmap" aria-labelledby="rm-h2">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <span class="sec-label">Step by Step</span>
+            <h2 class="sec-title" id="rm-h2">Career Roadmap</h2>
+            <p class="sec-sub">
+              Read our clear, step-by-step career roadmaps to begin your journey in tech and marketing.
+            </p>
+          </div>
+        </div>
+        <div class="rm-grid" id="rm-grid"></div>
+      </div>
+    </section>
+
+    <!-- SYLLABUS -->
+    <section class="section section--alt" id="syllabus" aria-labelledby="syl-h2">
+      <div class="container">
+        <div class="syl-card">
+          <span class="syl-pill">Syllabus</span>
+          <h2 class="syl-title" id="syl-h2">Explore detailed course syllabus</h2>
+          <div class="syl-grid" id="syl-grid"></div>
         </div>
       </div>
     </section>
@@ -438,14 +459,35 @@
             color: '#166534',
             bg: '#dcfce7',
             icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-            items: [{ label: 'Ethical Hacking', isNew: true }],
+            items: [
+              { label: 'Ethical Hacking', isNew: true },
+              { label: 'Penetration Testing', isNew: true },
+              { label: 'SOC Analyst', isNew: true },
+              { label: 'Network Security' },
+            ],
           },
           {
             group: 'Development',
             color: '#5b21b6',
             bg: '#ede9fe',
             icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
-            items: [{ label: 'Web Development' }, { label: 'App Development' }],
+            items: [
+              { label: 'Web Development' },
+              { label: 'App Development' },
+              { label: 'Full Stack Web Development', isNew: true },
+              { label: 'MERN Stack', isNew: true },
+            ],
+          },
+          {
+            group: 'Other',
+            color: '#be123c',
+            bg: '#ffe4e6',
+            icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
+            items: [
+              { label: 'Artificial Intelligence' },
+              { label: 'Career Guidance' },
+              { label: 'Interview Questions' },
+            ],
           },
         ];
 
@@ -473,6 +515,35 @@
           ).join('');
         }
 
+        /* Latest post card (no excerpt) */
+        function renderLatestCard(a) {
+          if (!a) return '';
+          const d = new Date(a.publishedDate);
+          const date = isNaN(d)
+            ? ''
+            : d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+          const cat = getCategoryForArticle(a);
+          const cColor = cat ? cat.color : '#194cff';
+          const cBg = cat ? cat.bgColor : '#e8edff';
+          const cName = cat ? cat.name : '';
+          return `<a class="lcard" href="article.html?id=${encodeURIComponent(a.id)}" aria-label="${escapeHtml(a.title)}" style="--lc-c:${cColor};--lc-bg:${cBg};">
+        <span class="lcard-img">
+          <img src="${escapeHtml(a.image)}" alt="${escapeHtml(a.imageAlt || a.title)}" loading="lazy" onerror="this.style.display='none'" />
+        </span>
+        <span class="lcard-body">
+          <span class="lcard-bar" aria-hidden="true"></span>
+          <span class="lcard-meta">
+            <span class="lcard-cat"><i aria-hidden="true"></i>${escapeHtml(cName)}</span>
+            <span class="lcard-date">${escapeHtml(date)}</span>
+          </span>
+          <span class="lcard-title">${escapeHtml(a.title)}</span>
+          <span class="lcard-link">Read Article
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </span>
+        </span>
+      </a>`;
+        }
+
         /* Latest posts */
         let latestShown = 0;
         const BATCH = 6;
@@ -483,9 +554,9 @@
           const all = getLatest();
           const batch = all.slice(latestShown, latestShown + BATCH);
           if (latestShown === 0) {
-            grid.innerHTML = batch.map((a) => renderArticleCard(a)).join('');
+            grid.innerHTML = batch.map((a) => renderLatestCard(a)).join('');
           } else {
-            grid.innerHTML += batch.map((a) => renderArticleCard(a)).join('');
+            grid.innerHTML += batch.map((a) => renderLatestCard(a)).join('');
           }
           latestShown += BATCH;
           if (btn) btn.style.display = latestShown >= all.length ? 'none' : '';
@@ -537,25 +608,157 @@
         }
 
         /* Trending */
-        function renderTrending() {
-          const el = document.getElementById('trending-grid');
-          if (!el) return;
-          el.innerHTML = getTrending(8)
-            .map((a, i) => renderTrendingCard(a, i))
-            .join('');
+        /* Interview questions with tabs (compact cards) */
+        const IQ_TABS = [
+          {
+            key: 'dm',
+            label: 'Digital Marketing',
+            color: '#194cff',
+            bg: '#e8edff',
+            icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+            pool: [
+              'what-is-digital-marketing',
+              'types-of-digital-marketing',
+              'what-is-seo',
+              'social-media-marketing',
+              'content-marketing-strategy',
+              'seo-keyword-research',
+            ],
+            qs: [
+              ['What is the difference between SEO and SEM?', 'Beginner'],
+              ['How do you measure the ROI of a digital marketing campaign?', 'Intermediate'],
+              ['Explain CTR, CPC and CPA with examples.', 'Beginner'],
+              ['What is a marketing funnel and its stages?', 'Beginner'],
+              ['How does Google Ads Quality Score work?', 'Advanced'],
+              ['Organic vs paid traffic: when should you use which?', 'Intermediate'],
+            ],
+          },
+          {
+            key: 'web',
+            label: 'Web Development',
+            color: '#5b21b6',
+            bg: '#ede9fe',
+            icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+            pool: [
+              'full-stack-developer-guide',
+              'web-design-vs-development',
+              'what-does-web-developer-do',
+              'is-full-stack-good-career',
+              'html-interview-questions',
+              'java-interview-questions',
+            ],
+            qs: [
+              ['What is the difference between let, const and var?', 'Beginner'],
+              ['Explain the CSS box model.', 'Beginner'],
+              ['What are closures in JavaScript?', 'Intermediate'],
+              ['How does the JavaScript event loop work?', 'Advanced'],
+              ['REST vs GraphQL: what are the key differences?', 'Intermediate'],
+              ['What is the virtual DOM and why is it used?', 'Intermediate'],
+            ],
+          },
+          {
+            key: 'data',
+            label: 'Data Analytics',
+            color: '#c77200',
+            bg: '#fff3dc',
+            icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>',
+            pool: [
+              'data-science-vs-ml',
+              'what-is-ai',
+              'generative-ai-roadmap',
+              'ai-agents-guide',
+              'demanding-skills-future',
+              'high-income-skills',
+            ],
+            qs: [
+              ['What is the difference between INNER JOIN and LEFT JOIN?', 'Beginner'],
+              ['How do you handle missing values in a dataset?', 'Intermediate'],
+              ['What is data normalization and why does it matter?', 'Beginner'],
+              ['Data warehouse vs data lake: what is the difference?', 'Intermediate'],
+              ['Explain variance and standard deviation.', 'Intermediate'],
+              ['How would you detect and treat outliers?', 'Advanced'],
+            ],
+          },
+          {
+            key: 'cyber',
+            label: 'Cyber Security',
+            color: '#15803d',
+            bg: '#dcfce7',
+            icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+            pool: [
+              'cybersecurity-career',
+              'demanding-skills-future',
+              'high-income-skills',
+              'will-ai-replace-digital-marketers',
+              'ai-agents-guide',
+              'what-is-ai',
+            ],
+            qs: [
+              ['What is the CIA triad in information security?', 'Beginner'],
+              ['Symmetric vs asymmetric encryption: key differences?', 'Intermediate'],
+              ['What is SQL injection and how do you prevent it?', 'Intermediate'],
+              ['Explain Cross-Site Scripting (XSS) and its types.', 'Advanced'],
+              ['What is the difference between a virus, worm and trojan?', 'Beginner'],
+              ['How does two-factor authentication improve security?', 'Beginner'],
+            ],
+          },
+        ];
+
+        function renderInterview() {
+          const tabsEl = document.getElementById('iq-tabs');
+          const panel = document.getElementById('iq-panel');
+          if (!tabsEl || !panel) return;
+          let active = IQ_TABS[0].key;
+
+          function card(t, q, i) {
+            const a = getArticleById(t.pool[i % t.pool.length]);
+            const href = a ? 'article.html?id=' + encodeURIComponent(a.id) : '#';
+            const img = a ? a.image : '';
+            const lvl = q[1].toLowerCase();
+            return `<a class="iq-q" href="${escapeHtml(href)}" style="--iq-c:${t.color};--iq-bg:${t.bg};">
+          <span class="iq-q-num">${String(i + 1).padStart(2, '0')}</span>
+          <span class="iq-q-thumb"><img src="${escapeHtml(img)}" alt="" loading="lazy" onerror="this.style.display='none'" /></span>
+          <span class="iq-q-body">
+            <span class="iq-q-lvl iq-lvl-${lvl}">${escapeHtml(q[1])}</span>
+            <span class="iq-q-title">${escapeHtml(q[0])}</span>
+          </span>
+          <svg class="iq-q-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>`;
+          }
+
+          function draw() {
+            tabsEl.innerHTML = IQ_TABS.map(
+              (
+                t,
+              ) => `<button type="button" class="iq-tab${t.key === active ? ' active' : ''}" role="tab" aria-selected="${t.key === active}" data-k="${t.key}" style="--iq-c:${t.color};--iq-bg:${t.bg};">
+          <span class="iq-tab-mark" aria-hidden="true">${t.icon}</span>${escapeHtml(t.label)}
+        </button>`,
+            ).join('');
+            const t = IQ_TABS.find((x) => x.key === active);
+            const wrap = panel.parentElement;
+            wrap.style.setProperty('--iq-c', t.color);
+            wrap.style.setProperty('--iq-bg', t.bg);
+            panel.innerHTML = `<div class="iq-grid">${t.qs.map((q, i) => card(t, q, i)).join('')}</div>`;
+          }
+
+          tabsEl.addEventListener('click', (e) => {
+            const b = e.target.closest('.iq-tab');
+            if (!b) return;
+            active = b.getAttribute('data-k');
+            draw();
+          });
+          draw();
         }
 
-        /* Rich topic card for the "Explore by Category" blocks */
-        function renderTopicCard(article, cat) {
+        /* Compact article row for the "Explore by Category" cards */
+        function renderTopicRow(article) {
           if (!article) return '';
-          return `<a href="article.html?id=${escapeHtml(article.id)}" class="tpc" aria-label="${escapeHtml(article.title)}">
-        <div class="tpc-img">
-          <img src="${escapeHtml(article.image)}" alt="${escapeHtml(article.imageAlt || article.title)}" loading="lazy" onerror="this.style.display='none'" />
-        </div>
-        <div class="tpc-body">
-          <h4 class="tpc-title">${escapeHtml(article.title)}</h4>
-          <p class="tpc-excerpt">${escapeHtml(article.excerpt)}</p>
-        </div>
+          return `<a href="article.html?id=${escapeHtml(article.id)}" class="xc-row" aria-label="${escapeHtml(article.title)}">
+        <span class="xc-thumb"><img src="${escapeHtml(article.image)}" alt="" loading="lazy" onerror="this.style.display='none'" /></span>
+        <span class="xc-info">
+          <span class="xc-title">${escapeHtml(article.title)}</span>
+          <span class="xc-meta">${formatDate(article.publishedDate)} · ${article.readingTime || 5} min read</span>
+        </span>
       </a>`;
         }
 
@@ -563,27 +766,33 @@
         function renderCatBlocks() {
           const el = document.getElementById('cat-blocks');
           if (!el) return;
-          const CATS = ['digital-marketing', 'web-development', 'artificial-intelligence', 'seo', 'career-guidance'];
+          const CATS = [
+            'digital-marketing',
+            'web-development',
+            'artificial-intelligence',
+            'seo',
+            'career-guidance',
+            'interview-questions',
+          ];
           el.innerHTML = CATS.map((catId) => {
             const cat = getCategoryById(catId);
             if (!cat) return '';
-            const articles = getArticlesByCategory(catId).slice(0, 3);
+            const all = getArticlesByCategory(catId);
+            const articles = all.slice(0, 3);
             if (!articles.length) return '';
-            return `<div class="cat-block" style="--cat-color:${cat.color};--cat-bg:${cat.bgColor};" aria-label="${escapeHtml(cat.name)} articles">
-        <div class="cat-block-head">
-          <div class="cat-block-name">
-            <span class="cat-block-badge" style="background:${cat.color};">${ICONS[catId] || ''}</span>
-            <span class="cat-block-name-text">
-              ${escapeHtml(cat.name)}
-              <span class="cat-block-tagline">${escapeHtml(cat.description)}</span>
-            </span>
+            return `<div class="xc" style="--cat-color:${cat.color};--cat-bg:${cat.bgColor};" aria-label="${escapeHtml(cat.name)} articles">
+        <div class="xc-head">
+          <span class="xc-badge">${ICONS[catId] || ''}</span>
+          <div class="xc-name">
+            <h3>${escapeHtml(cat.name)}</h3>
+            <span>${all.length} articles</span>
           </div>
-          <a href="category.html?id=${escapeHtml(cat.id)}" class="cat-block-viewall">
+          <a href="category.html?id=${escapeHtml(cat.id)}" class="xc-all" aria-label="View all ${escapeHtml(cat.name)} articles">
             View All
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
-        <div class="cat-block-grid">${articles.map((a) => renderTopicCard(a, cat)).join('')}</div>
+        <div class="xc-list">${articles.map((a) => renderTopicRow(a)).join('')}</div>
       </div>`;
           }).join('');
         }
@@ -990,6 +1199,129 @@
           }
         }
 
+        /* ---------------------------------------------------------
+           CAREER ROADMAP
+           --------------------------------------------------------- */
+        const RM_SVG = (p) =>
+          `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+        const ROADMAPS = [
+          {
+            title: 'Digital Marketing Roadmap',
+            desc: 'From SEO and ads to analytics, build job-ready marketing skills.',
+            dur: '6 Months',
+            color: '#194cff',
+            bg: '#e8edff',
+            icon: RM_SVG('<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'),
+            steps: ['Basics', 'SEO & Content', 'Paid Ads', 'Analytics'],
+            id: 'what-is-digital-marketing',
+          },
+          {
+            title: 'Web Developer Roadmap',
+            desc: 'Learn HTML, CSS and JavaScript, then ship real projects.',
+            dur: '5 Months',
+            color: '#5b21b6',
+            bg: '#ede9fe',
+            icon: RM_SVG('<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>'),
+            steps: ['HTML & CSS', 'JavaScript', 'Frameworks', 'Projects'],
+            id: 'what-does-web-developer-do',
+          },
+          {
+            title: 'Full Stack Developer Roadmap',
+            desc: 'Master front-end, back-end and databases to build complete apps.',
+            dur: '8 Months',
+            color: '#0e7490',
+            bg: '#cffafe',
+            icon: RM_SVG(
+              '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+            ),
+            steps: ['Front-end', 'Back-end', 'Database', 'Deploy'],
+            id: 'full-stack-developer-guide',
+          },
+          {
+            title: 'Data Analyst Roadmap',
+            desc: 'Go from spreadsheets and SQL to dashboards and insights.',
+            dur: '6 Months',
+            color: '#c77200',
+            bg: '#fff3dc',
+            icon: RM_SVG(
+              '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>',
+            ),
+            steps: ['Excel & SQL', 'Python', 'Visualization', 'Projects'],
+            id: 'data-science-vs-ml',
+          },
+          {
+            title: 'Cyber Security Roadmap',
+            desc: 'Understand networks, threats and ethical hacking step by step.',
+            dur: '7 Months',
+            color: '#15803d',
+            bg: '#dcfce7',
+            icon: RM_SVG('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'),
+            steps: ['Networking', 'Linux', 'Ethical Hacking', 'Certification'],
+            id: 'cybersecurity-career',
+          },
+          {
+            title: 'Generative AI Roadmap',
+            desc: 'Learn prompts, LLMs and AI tools to build smart applications.',
+            dur: '4 Months',
+            color: '#be123c',
+            bg: '#ffe4e6',
+            icon: RM_SVG(
+              '<circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>',
+            ),
+            steps: ['Python', 'ML Basics', 'LLMs & Prompts', 'AI Apps'],
+            id: 'generative-ai-roadmap',
+          },
+        ];
+
+        function renderRoadmaps() {
+          const el = document.getElementById('rm-grid');
+          if (!el) return;
+          el.innerHTML = ROADMAPS.map(
+            (
+              r,
+            ) => `<a class="rm-card" href="article.html?id=${encodeURIComponent(r.id)}" style="--rm-c:${r.color};--rm-bg:${r.bg};">
+        <div class="rm-top">
+          <span class="rm-ico" aria-hidden="true">${r.icon}</span>
+          <span class="rm-dur">${escapeHtml(r.dur)}</span>
+        </div>
+        <h3 class="rm-title">${escapeHtml(r.title)}</h3>
+        <p class="rm-desc">${escapeHtml(r.desc)}</p>
+        <ol class="rm-steps">${r.steps.map((s, i) => `<li><span>${i + 1}</span>${escapeHtml(s)}</li>`).join('')}</ol>
+        <span class="rm-link">View Roadmap
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>`,
+          ).join('');
+        }
+
+        /* ---------------------------------------------------------
+           SYLLABUS
+           --------------------------------------------------------- */
+        const SYLLABUS = [
+          'Digital Marketing Course Syllabus: Module-wise Topics & Free PDF',
+          'Web Development Course Syllabus: HTML, CSS, JavaScript & Projects',
+          'Full Stack Development Syllabus: Front-end, Back-end & Database',
+          'Data Analytics Course Syllabus: Excel, SQL, Python & Power BI',
+          'SEO Course Syllabus: On-Page, Off-Page & Technical SEO',
+          'Ethical Hacking Course Syllabus: Tools, Labs & Certifications',
+          'Python Programming Syllabus: Basics to Advanced Concepts',
+          'Artificial Intelligence Syllabus: ML, Deep Learning & Gen AI',
+          'App Development Syllabus: Android, iOS & Cross-Platform',
+        ];
+
+        function renderSyllabus() {
+          const el = document.getElementById('syl-grid');
+          if (!el) return;
+          el.innerHTML = SYLLABUS.map(
+            (t) => `<button type="button" class="syl-item" data-open-lead="Download Syllabus">
+        <span class="syl-text">${escapeHtml(t)}</span>
+        <span class="syl-chev" aria-hidden="true">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </button>`,
+          ).join('');
+        }
+
         /* Load-more */
         document.addEventListener('DOMContentLoaded', function () {
           const btn = document.getElementById('load-more-btn');
@@ -1001,11 +1333,13 @@
           renderBrowseGroups();
           renderLatest();
           renderEssential();
-          renderTrending();
+          renderInterview();
           renderCatBlocks();
           renderTutorials();
           renderMasterclass();
           renderMentors();
+          renderRoadmaps();
+          renderSyllabus();
           initLeadModal();
           initSearch();
         }
