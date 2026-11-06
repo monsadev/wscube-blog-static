@@ -284,6 +284,47 @@
       </div>
     </section>
 
+    <!-- FINAL CTA -->
+    <section class="section section--wht" id="final-cta" aria-labelledby="fcta-h2">
+      <div class="container">
+        <div class="fcta-card">
+          <div class="fcta-left">
+            <span class="fcta-pill">Free Career Counselling</span>
+            <h2 class="fcta-title" id="fcta-h2">Ready to Turn Learning into a <span>Career You Love?</span></h2>
+            <p class="fcta-sub">Talk to a program advisor, get a personalised learning path and start building job-ready skills with practical projects and expert guidance.</p>
+            <ul class="fcta-list">
+              <li>1:1 mentor guidance</li>
+              <li>Industry-ready curriculum</li>
+              <li>Placement support</li>
+            </ul>
+            <div class="fcta-actions">
+              <button class="fcta-btn fcta-btn--primary" type="button" data-open-lead="Get Free Counselling">Get Free Counselling →</button>
+              <button class="fcta-btn fcta-btn--ghost" type="button" data-open-lead="Download Curriculum">Download Curriculum</button>
+            </div>
+          </div>
+          <div class="fcta-right" aria-label="How it works">
+            <div class="fcta-panel">
+              <p class="fcta-panel-title">Your path in 3 simple steps</p>
+              <ol class="fcta-steps">
+                <li><span class="fcta-step-n">1</span><div><strong>Talk to program advisor</strong><span>Share your goals in a free 1:1 call.</span></div></li>
+                <li><span class="fcta-step-n">2</span><div><strong>Get your roadmap</strong><span>Receive a personalised, step-by-step plan.</span></div></li>
+                <li><span class="fcta-step-n">3</span><div><strong>Learn and get hired</strong><span>Build projects and prepare for interviews.</span></div></li>
+              </ol>
+              <div class="fcta-proof">
+                <div class="fcta-avatars" aria-hidden="true">
+                  <img src="assets/images/authors/ashima-jain.svg" alt="" />
+                  <img src="assets/images/authors/durjey-kayath.svg" alt="" />
+                  <img src="assets/images/authors/mohit-kumar.svg" alt="" />
+                  <img src="assets/images/authors/virendra-soni.svg" alt="" />
+                </div>
+                <p><strong>500,000+ learners</strong> and counting</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- LEAD MODAL -->
     <div class="lead-overlay" id="lead-overlay" role="dialog" aria-modal="true" aria-labelledby="lead-title" hidden>
       <div class="lead-modal">
@@ -715,7 +756,6 @@
           <span class="iq-q-num">${String(i + 1).padStart(2, '0')}</span>
           <span class="iq-q-thumb"><img src="${escapeHtml(img)}" alt="" loading="lazy" onerror="this.style.display='none'" /></span>
           <span class="iq-q-body">
-            <span class="iq-q-lvl iq-lvl-${lvl}">${escapeHtml(q[1])}</span>
             <span class="iq-q-title">${escapeHtml(q[0])}</span>
           </span>
           <svg class="iq-q-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1278,7 +1318,6 @@
             ) => `<a class="rm-card" href="article.html?id=${encodeURIComponent(r.id)}" style="--rm-c:${r.color};--rm-bg:${r.bg};">
         <div class="rm-top">
           <span class="rm-ico" aria-hidden="true">${r.icon}</span>
-          <span class="rm-dur">${escapeHtml(r.dur)}</span>
         </div>
         <h3 class="rm-title">${escapeHtml(r.title)}</h3>
         <p class="rm-desc">${escapeHtml(r.desc)}</p>
