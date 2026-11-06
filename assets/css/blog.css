@@ -721,8 +721,14 @@ ol {
    ================================================================ */
 .articles-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
+}
+/* narrower laptops: 3 columns so cards keep a comfortable width */
+@media (min-width: 1101px) and (max-width: 1200px) {
+  .articles-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 .articles-grid-2 {
   display: grid;

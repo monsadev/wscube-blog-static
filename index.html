@@ -138,19 +138,19 @@
           <div class="iq-panel" id="iq-panel" role="tabpanel" aria-live="polite"></div>
         </div>
         <div class="iq-cta">
-<div class="usk-card">
-          <div class="usk-left">
-            <h2 class="usk-title" id="usk-h2">Unlock Your Skills → Start Learning Today</h2>
-            <p class="usk-sub">Join thousands of learners boosting their careers with industry-ready courses.</p>
-            <button class="usk-cta" type="button" data-open-lead="Book Mentor Session">Book Mentor Session →</button>
-          </div>
-          <div class="usk-right">
-            <div class="usk-viewport">
-              <div class="usk-track" id="usk-track" aria-label="Mentors"></div>
+          <div class="usk-card">
+            <div class="usk-left">
+              <h2 class="usk-title" id="usk-h2">Unlock Your Skills → Start Learning Today</h2>
+              <p class="usk-sub">Join thousands of learners boosting their careers with industry-ready courses.</p>
+              <button class="usk-cta" type="button" data-open-lead="Book Mentor Session">Book Mentor Session →</button>
             </div>
-            <div class="usk-dots" id="usk-dots" role="tablist" aria-label="Mentor slides"></div>
+            <div class="usk-right">
+              <div class="usk-viewport">
+                <div class="usk-track" id="usk-track" aria-label="Mentors"></div>
+              </div>
+              <div class="usk-dots" id="usk-dots" role="tablist" aria-label="Mentor slides"></div>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </section>
@@ -170,8 +170,6 @@
       </div>
     </section>
 
-
-
     <!-- CATEGORY BLOCKS -->
     <section class="section section--wht" id="by-topic" aria-labelledby="topic-h2">
       <div class="container">
@@ -184,37 +182,35 @@
         </div>
         <div id="cat-blocks" class="cat-blocks" aria-label="Articles by topic"></div>
         <div class="xc-cta">
-<div class="pt-wrap">
-          <div class="pt-intro">
-            <span class="pt-badge" aria-hidden="true">
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-              </svg>
-            </span>
-            <h2 class="sec-title" id="pt-h2">Popular Tutorials</h2>
-            <p class="pt-sub">Unlock your potential with WsCube Tech's complimentary learning tools.</p>
-            <p class="pt-quote">
-              "Boost your skills with WsCube Tech's latest tutorials — HTML, CSS, JavaScript &amp; more.
-              <span class="pt-quote-accent">Stay tuned!</span>"
-            </p>
+          <div class="pt-wrap">
+            <div class="pt-intro">
+              <span class="pt-badge" aria-hidden="true">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+              </span>
+              <h2 class="sec-title" id="pt-h2">Popular Tutorials</h2>
+              <p class="pt-sub">Unlock your potential with WsCube Tech's complimentary learning tools.</p>
+              <p class="pt-quote">
+                "Boost your skills with WsCube Tech's latest tutorials — HTML, CSS, JavaScript &amp; more.
+                <span class="pt-quote-accent">Stay tuned!</span>"
+              </p>
+            </div>
+            <div class="pt-grid" id="pt-grid" role="list" aria-label="Popular tutorials"></div>
           </div>
-          <div class="pt-grid" id="pt-grid" role="list" aria-label="Popular tutorials"></div>
-        </div>
         </div>
       </div>
     </section>
-
-
 
     <!-- UPCOMING MASTERCLASS -->
     <section class="section mc-section" id="masterclass" aria-labelledby="mc-h2">
@@ -546,7 +542,7 @@
 
         /* Latest posts */
         let latestShown = 0;
-        const BATCH = 6;
+        const BATCH = 8;
         function renderLatest() {
           const grid = document.getElementById('latest-grid');
           const btn = document.getElementById('load-more-btn');
