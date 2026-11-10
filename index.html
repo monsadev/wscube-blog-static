@@ -11,71 +11,109 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="assets/css/blog.css" />
+    <link rel="stylesheet" href="assets/css/hero-variants.css" />
   </head>
   <body>
-    <!-- HERO -->
-    <section class="hero" id="top" aria-label="Hero">
-      <div class="hero-dots" aria-hidden="true"></div>
+    <!-- HERO (variant 3: centered light hero with floating cards + stats) -->
+    <section class="hx hx-center" id="top" aria-label="Hero">
+      <div class="hx-bg" aria-hidden="true">
+        <span class="hx-blob hx-blob-1"></span>
+        <span class="hx-blob hx-blob-2"></span>
+        <span class="hx-dots"></span>
+      </div>
       <div class="container">
-        <div class="hero-inner">
-          <span class="hero-eyebrow">
-            <span class="hero-eyebrow-dot" aria-hidden="true"></span>
-            Your Learning Hub for Tech &amp; Marketing
-          </span>
+        <!--
+        <article class="hx-float hx-float-l" aria-hidden="true">
+          <img src="assets/images/articles/ai-agents.webp" alt="" />
+          <span class="hx-float-cat" style="background: #e3e0f3; color: #2d0095">Artificial Intelligence</span>
+          <p class="hx-float-title">What Are AI Agents? A Beginner's Guide</p>
+        </article>
+        <article class="hx-float hx-float-r" aria-hidden="true">
+          <img src="assets/images/articles/high-income-skills.webp" alt="" />
+          <span class="hx-float-cat" style="background: #ffedea; color: #b91c1c">Career Guidance</span>
+          <p class="hx-float-title">Top 17 High-Income Skills to Learn in 2026</p>
+        </article>
+        -->
 
-          <h1 class="hero-h1">Learn, Grow &amp; <span class="accent">Build Skills</span> That Pay</h1>
-
-          <p class="hero-desc">
+        <div class="hx-center-inner">
+          <span class="hx-eyebrow"
+            ><span class="hx-eyebrow-dot" aria-hidden="true"></span>Your Learning Hub for Tech &amp; Marketing</span
+          >
+          <h1 class="hx-title">Learn, Grow &amp; <span class="hx-accent">Build Skills</span> That Pay</h1>
+          <p class="hx-desc">
             In-depth guides on Digital Marketing, Web Development, AI, SEO and Career Growth — written by industry
             experts, trusted by 500,000+ learners.
           </p>
 
           <!-- Inline live search -->
-          <div class="hero-search-wrap" id="hero-search-wrap" role="search" aria-label="Search articles">
-            <div class="hero-search-bar">
-              <span class="hero-search-icon" aria-hidden="true">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#9ca3af"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
-              </span>
+          <div class="hx-search-wrap" id="hero-search-wrap" role="search" aria-label="Search articles">
+            <div class="hx-search-bar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
               <input
                 id="hero-search-input"
                 type="search"
-                class="hero-search-input"
+                class="hx-search-input"
                 placeholder="Search articles, topics, skills..."
                 autocomplete="off"
                 spellcheck="false"
                 aria-label="Search articles"
               />
-              <button id="hero-search-btn" class="hero-search-btn" aria-label="Search">Search</button>
+              <button id="hero-search-btn" class="hx-search-btn" type="button" aria-label="Search">Search</button>
             </div>
             <!-- Autocomplete dropdown injected by search.js -->
           </div>
 
-          <!-- Stats -->
-          <div class="hero-stats" aria-label="Site stats">
-            <div class="hero-stat">
-              <span class="hero-stat-num">25+</span><span class="hero-stat-lbl">Articles</span>
-            </div>
-            <div class="hero-stat">
-              <span class="hero-stat-num">6</span><span class="hero-stat-lbl">Categories</span>
-            </div>
-            <div class="hero-stat"><span class="hero-stat-num">5</span><span class="hero-stat-lbl">Authors</span></div>
-            <div class="hero-stat"><span class="hero-stat-num">100%</span><span class="hero-stat-lbl">Free</span></div>
+          <!--
+          <div class="hx-quick" aria-label="Popular searches">
+            <span class="hx-quick-lbl">Trending:</span>
+            <button type="button" class="hx-chip" data-q="SEO">SEO</button>
+            <button type="button" class="hx-chip" data-q="Digital Marketing">Digital Marketing</button>
+            <button type="button" class="hx-chip" data-q="Full Stack">Full Stack</button>
+            <button type="button" class="hx-chip" data-q="Python">Python</button>
+          </div>
+          -->
+
+        </div>
+
+        <div class="hx-stats" aria-label="Site stats">
+          <div class="hx-stat">
+            <span class="hx-stat-ico"
+              ><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /><line x1="8" y1="17" x2="16" y2="17" /></svg
+            ></span>
+            <div><b>25+</b><span>Articles</span></div>
+          </div>
+          <div class="hx-stat">
+            <span class="hx-stat-ico"
+              ><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /></svg
+            ></span>
+            <div><b>6</b><span>Categories</span></div>
+          </div>
+          <div class="hx-stat">
+            <span class="hx-stat-ico"
+              ><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg
+            ></span>
+            <div><b>5</b><span>Expert Authors</span></div>
+          </div>
+          <div class="hx-stat">
+            <span class="hx-stat-ico"
+              ><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg
+            ></span>
+            <div><b>100%</b><span>Free Access</span></div>
           </div>
         </div>
       </div>
     </section>
+    <script>
+      document.querySelectorAll('.hx-chip').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var i = document.getElementById('hero-search-input');
+          if (!i) return;
+          i.value = b.getAttribute('data-q');
+          i.focus();
+          i.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      });
+    </script>
 
     <!-- BROWSE BY CATEGORY -->
     <section class="section section--wht" id="categories" aria-labelledby="cats-h2">
