@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,9 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="assets/css/blog.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
   </head>
   <body>
-    <!-- Reading progress bar -->
     <div
       class="reading-bar"
       id="reading-bar"
@@ -21,365 +21,616 @@
       aria-label="Reading progress"
     ></div>
 
-    <!-- Article header (populated by JS) -->
-    <div id="article-header-wrap"></div>
+    <header class="pg-hero pg-art-hero" id="art-hero"></header>
 
-    <!-- Featured image + body (populated by JS) -->
-    <div class="container" id="article-main"></div>
+    <div class="pg-wrap">
+      <div class="pg-art-layout" id="art-layout"></div>
+    </div>
 
-    <!-- Related articles -->
-    <section class="related-section" id="related-section">
-      <div class="container">
-        <div class="section-head">
+    <section class="pg-sec pg-sec--alt" id="related" style="display: none">
+      <div class="pg-wrap">
+        <div class="pg-sec-head">
           <div>
-            <span class="section-label" aria-hidden="true">Read Next</span>
-            <h2 class="section-title">Related Articles</h2>
+            <span class="pg-eyebrow">Read Next</span>
+            <h2 class="pg-h2">Related Articles</h2>
           </div>
         </div>
-        <div id="related-grid" class="related-grid" aria-label="Related articles"></div>
+        <div class="pg-posts pg-rel3" id="related-grid"></div>
       </div>
     </section>
 
     <script src="assets/js/data.js"></script>
     <script src="assets/js/render.js"></script>
     <script src="assets/js/search.js"></script>
+    <script src="assets/js/shared.js"></script>
     <script>
       (function () {
         'use strict';
+        var esc = escapeHtml;
+        var CHECK = PG.svg('<polyline points="20 6 9 17 4 12"/>', 15);
 
-        function getParam(k) {
+        function param(k) {
           return new URLSearchParams(location.search).get(k);
         }
+        function isFaqHeading(b) {
+          return b && b.type === 'heading' && /faq|frequently asked/i.test(b.text || '');
+        }
 
-        /* ---- Build Table of Contents from content blocks ---- */
-        function buildTOC(blocks) {
-          const headings = (blocks || []).filter((b) => b.type === 'heading' && (b.level === 2 || b.level === 3));
-          if (!headings.length) return '';
-          const items = headings
-            .map((h) => {
-              const id = slugify(h.text || '');
-              const cls = h.level === 3 ? ' h3' : '';
-              return `<a href="#${id}" class="toc-link${cls}" data-toc="${id}">${escapeHtml(h.text)}</a>`;
+        /* ---------- split content: body blocks vs faq items ---------- */
+        function splitContent(blocks) {
+          var body = [],
+            faqs = [];
+          (blocks || []).forEach(function (b, i, arr) {
+            if (b.type === 'faq') {
+              faqs = faqs.concat(b.items || []);
+              return;
+            }
+            if (isFaqHeading(b)) return;
+            body.push(b);
+          });
+          return { body: body, faqs: faqs };
+        }
+
+        /* ---------- TOC ---------- */
+        function tocItems(body, hasFaq, hasComments) {
+          var items = body
+            .filter(function (b) {
+              return b.type === 'heading' && (b.level === 2 || b.level === 3);
+            })
+            .map(function (h) {
+              return { id: slugify(h.text), text: h.text, l: h.level };
+            });
+          if (hasFaq) items.push({ id: 'faqs', text: 'FAQs', l: 2 });
+          if (hasComments) items.push({ id: 'comments', text: 'Comments', l: 2 });
+          return items;
+        }
+        function tocHTML(items) {
+          if (!items.length) return '';
+          return (
+            '<div class="pg-toc" id="pg-toc"><div class="pg-toc-hd"><span>Table of Contents</span><button type="button" id="pg-toc-btn" aria-expanded="false">Show</button></div><nav aria-label="Table of contents">' +
+            items
+              .map(function (t) {
+                return (
+                  '<a href="#' +
+                  t.id +
+                  '" data-toc="' +
+                  t.id +
+                  '" class="' +
+                  (t.l === 3 ? 'h3' : '') +
+                  '">' +
+                  esc(t.text) +
+                  '</a>'
+                );
+              })
+              .join('') +
+            '</nav></div>'
+          );
+        }
+
+        /* ---------- hero ---------- */
+        function heroHTML(a, cat, auth, cfg) {
+          var icon = PG.svg(
+            '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+            15,
+          );
+          var clock = PG.svg('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>', 15);
+          var short = a.title.length > 52 ? a.title.slice(0, 50) + '…' : a.title;
+          var google =
+            '<a class="pgb pgb--ghost pg-google" href="https://www.google.com/preferences/source?q=wscubetech.com" target="_blank" rel="noopener">' +
+            '<svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3A12 12 0 1 1 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7A20 20 0 1 0 44 24c0-1.3-.1-2.7-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8A12 12 0 0 1 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7A20 20 0 0 0 6.3 14.7z"/><path fill="#4CAF50" d="M24 44a20 20 0 0 0 13.4-5.2l-6.2-5.2A12 12 0 0 1 12.7 28l-6.5 5A20 20 0 0 0 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3a12 12 0 0 1-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.7-.4-3.9z"/></svg> Add as a preferred source on Google</a>';
+          var course = cfg.course
+            ? '<a class="pgb pgb--ghost" href="' +
+              esc(cfg.course.href) +
+              '" target="_blank" rel="noopener">' +
+              esc(cfg.course.t) +
+              ' ' +
+              PG.I.arrow +
+              '</a>'
+            : '';
+          return (
+            '<div class="pg-wrap"><nav class="pg-bc" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">›</span><a href="category.html?id=' +
+            esc(cat.id) +
+            '">' +
+            esc(cat.name) +
+            '</a><span aria-hidden="true">›</span><span class="pg-bc-cur">' +
+            esc(short) +
+            '</span></nav>' +
+            '<a class="pg-pill" href="category.html?id=' +
+            esc(cat.id) +
+            '" style="text-decoration:none"><i></i>' +
+            esc(cat.name) +
+            '</a>' +
+            '<h1 class="pg-title">' +
+            esc(a.title) +
+            '</h1>' +
+            '<p class="pg-intro">' +
+            esc(a.excerpt) +
+            '</p>' +
+            '<div class="pg-art-meta"><div><img src="' +
+            esc(auth.avatar) +
+            '" alt="' +
+            esc(auth.name) +
+            '" onerror="this.style.display=\'none\'" /><span>By <b>' +
+            esc(auth.name) +
+            '</b></span></div>' +
+            '<span>' +
+            icon +
+            ' Last updated: <b>' +
+            formatDate(a.publishedDate) +
+            '</b></span><span>' +
+            clock +
+            ' <b>' +
+            (a.readingTime || 5) +
+            ' min</b> read</span></div>' +
+            '<div class="pg-art-actions">' +
+            '<div class="pg-dd" id="pg-dd"><button class="pgb pgb--primary" type="button" id="pg-dd-btn" aria-haspopup="true" aria-expanded="false">' +
+            PG.I.dl +
+            ' Download Free Resources ' +
+            PG.svg('<polyline points="6 9 12 15 18 9"/>', 15) +
+            '</button>' +
+            '<div class="pg-dd-menu" role="menu">' +
+            '<button type="button" role="menuitem" data-open-lead="Download Curriculum">' +
+            PG.svg(
+              '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+              17,
+            ) +
+            ' Download Curriculum</button>' +
+            '<button type="button" role="menuitem" data-open-lead="Download Placement Report">' +
+            PG.svg(
+              '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+              17,
+            ) +
+            ' Download Placement Report</button></div></div>' +
+            course +
+            google +
+            '<a class="pgb pgb--ghost" href="#related" id="pg-rel-btn">Related blogs ' +
+            PG.svg('<polyline points="6 9 12 15 18 9"/>', 15) +
+            '</a></div>' +
+            '<div class="pg-art-foot">' +
+            PG.shareHTML(a.title) +
+            '</div></div>'
+          );
+        }
+
+        /* ---------- body with inline blocks ---------- */
+        function courseCard(cfg, cat) {
+          var c = cfg.course;
+          return (
+            '<div class="pg-ccard"><span class="pg-ccard-ico">' +
+            PG.svg('<path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>', 30) +
+            '</span>' +
+            '<div class="pg-ccard-body"><small>Recommended Program</small><h3>' +
+            esc(c ? c.t : 'Explore our online programs') +
+            '</h3><p>' +
+            (c
+              ? 'Live mentor-led classes, real projects and placement support. ' + esc(c.d) + ' · ' + esc(c.m)
+              : 'Live mentor-led classes, real projects and placement support.') +
+            '</p></div>' +
+            '<div class="pg-ccard-act">' +
+            (c
+              ? '<a class="pgb pgb--primary pgb--sm" href="' +
+                esc(c.href) +
+                '" target="_blank" rel="noopener">Know More</a>'
+              : '') +
+            '<button class="pgb pgb--ghost pgb--sm" type="button" data-open-lead="Download Curriculum">Curriculum</button></div></div>'
+          );
+        }
+        function downloadForm() {
+          return (
+            '<div class="pg-dform" id="pg-dform"><div><h3>Get the free curriculum &amp; career guide</h3><p>Enter your details and our team will send the complete syllabus, fee details and placement report.</p></div>' +
+            '<form id="pg-dform-f" novalidate><div class="row"><input type="text" id="pd-name" placeholder="Your name" autocomplete="name" aria-label="Your name" /><input type="tel" id="pd-phone" placeholder="Phone number" inputmode="numeric" maxlength="10" aria-label="Phone number" /></div>' +
+            '<input type="email" id="pd-mail" placeholder="Email address" autocomplete="email" aria-label="Email address" />' +
+            '<button class="pgb pgb--yellow" type="submit">' +
+            PG.I.dl +
+            ' Download Now</button><p class="msg" id="pd-msg" aria-live="polite"></p></form></div>'
+          );
+        }
+        function takeaways(body) {
+          var heads = body
+            .filter(function (b) {
+              return b.type === 'heading' && b.level === 2;
+            })
+            .slice(0, 5);
+          if (heads.length < 2) return '';
+          return (
+            '<section class="pg-takeaways" aria-label="Key takeaways"><h2><span>' +
+            PG.svg(
+              '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/>',
+              17,
+            ) +
+            '</span>Key Takeaways</h2><ul>' +
+            heads
+              .map(function (h) {
+                return '<li>' + CHECK + '<span>' + esc(h.text) + '</span></li>';
+              })
+              .join('') +
+            '</ul></section>'
+          );
+        }
+        function bodyHTML(body, cfg, cat) {
+          var h2idx = [];
+          body.forEach(function (b, i) {
+            if (b.type === 'heading' && b.level === 2) h2idx.push(i);
+          });
+          var courseAt = h2idx.length > 2 ? h2idx[1] : -2;
+          var formAt = h2idx.length > 3 ? h2idx[Math.min(3, h2idx.length - 1)] : -2;
+          var out = '',
+            tk = false;
+          body.forEach(function (b, i) {
+            if (i === courseAt) out += courseCard(cfg, cat);
+            if (i === formAt) out += downloadForm();
+            out += renderBlock(b);
+            if (!tk && b.type === 'paragraph') {
+              out += takeaways(body);
+              tk = true;
+            }
+          });
+          if (courseAt === -2) out += courseCard(cfg, cat);
+          if (formAt === -2) out += downloadForm();
+          return out;
+        }
+
+        /* ---------- authors ---------- */
+        function authorsHTML(auth) {
+          var all = getAuthors();
+          var rev =
+            all.filter(function (x) {
+              return x.id !== auth.id;
+            })[0] || auth;
+          function card(label, p, role) {
+            return (
+              '<div class="pg-author"><img src="' +
+              esc(p.avatar) +
+              '" alt="' +
+              esc(p.name) +
+              '" loading="lazy" onerror="this.src=\'assets/images/authors/default.svg\'" /><div><small>' +
+              label +
+              '</small><b>' +
+              esc(p.name) +
+              '</b><div class="role">' +
+              esc(role) +
+              '</div><p>' +
+              esc(p.bio) +
+              '</p></div></div>'
+            );
+          }
+          return (
+            '<div class="pg-authors">' +
+            card('Written by', auth, auth.role) +
+            card('Reviewed by', rev, 'Reviewer · ' + rev.role) +
+            '</div>'
+          );
+        }
+
+        /* ---------- comments ---------- */
+        function commentsKey(id) {
+          return 'wsc_comments_' + id;
+        }
+        function loadComments(id) {
+          try {
+            return JSON.parse(localStorage.getItem(commentsKey(id)) || '[]');
+          } catch (e) {
+            return [];
+          }
+        }
+        function commentsListHTML(list) {
+          if (!list.length) return '<p class="pg-cempty">No comments yet. Be the first to share your thoughts.</p>';
+          return (
+            '<div class="pg-clist">' +
+            list
+              .map(function (c) {
+                return (
+                  '<div class="pg-citem"><span class="pg-cav">' +
+                  esc((c.name || 'A').charAt(0).toUpperCase()) +
+                  '</span><div><b>' +
+                  esc(c.name) +
+                  '</b><small>' +
+                  esc(c.date) +
+                  '</small><p>' +
+                  esc(c.text) +
+                  '</p></div></div>'
+                );
+              })
+              .join('') +
+            '</div>'
+          );
+        }
+        function commentsHTML(id) {
+          return (
+            '<section class="pg-comments" id="comments"><h2>Comments</h2><div id="pg-clist-wrap">' +
+            commentsListHTML(loadComments(id)) +
+            '</div>' +
+            '<form class="pg-cform" id="pg-cform" novalidate><div class="row"><input type="text" id="pc-name" placeholder="Your name" aria-label="Your name" /><input type="email" id="pc-mail" placeholder="Email (not published)" aria-label="Email" /></div>' +
+            '<textarea id="pc-text" placeholder="Write your comment..." aria-label="Comment"></textarea><button class="pgb pgb--primary" type="submit">Post Comment</button><p class="msg" id="pc-msg" style="margin:0;font-size:.8125rem" aria-live="polite"></p></form></section>'
+          );
+        }
+
+        /* ---------- sidebar ---------- */
+        function sideHTML(a, cat, cfg) {
+          var cats = getCategories()
+            .map(function (x) {
+              return (
+                '<a href="category.html?id=' +
+                esc(x.id) +
+                '" class="cat-li' +
+                (x.id === cat.id ? ' active' : '') +
+                '"><span class="cat-li-name"><span style="color:' +
+                x.color +
+                '">' +
+                (ICONS[x.id] || '') +
+                '</span>' +
+                esc(x.name) +
+                '</span><span class="cat-li-count">' +
+                getArticlesByCategory(x.id).length +
+                '</span></a>'
+              );
             })
             .join('');
-          return `<div class="toc-widget">
-      <div class="toc-hd">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-        Table of Contents
-      </div>
-      <nav class="toc-list" aria-label="Article sections">${items}</nav>
-    </div>`;
-        }
-
-        /* ---- Related sidebar ---- */
-        function buildRelatedSidebar(articleId, catId) {
-          const related = getArticlesByCategory(catId)
-            .filter((a) => a.id !== articleId)
-            .slice(0, 4);
-          if (!related.length) return '';
-          const items = related
-            .map(
-              (a) => `
-      <a href="article.html?id=${escapeHtml(a.id)}" class="pop-item">
-        <div class="pop-title">${escapeHtml(a.title)}</div>
-        <div class="pop-meta">${formatDate(a.publishedDate)}</div>
-      </a>`,
-            )
+          var pop = getTrending(6)
+            .filter(function (x) {
+              return x.id !== a.id;
+            })
+            .slice(0, 5)
+            .map(function (x, i) {
+              return (
+                '<a href="article.html?id=' +
+                esc(x.id) +
+                '" class="pop-item"><span class="pop-num">' +
+                String(i + 1).padStart(2, '0') +
+                '</span><div><div class="pop-title">' +
+                esc(x.title) +
+                '</div><div class="pop-meta">' +
+                formatDate(x.publishedDate) +
+                '</div></div></a>'
+              );
+            })
             .join('');
-          return `<div class="sw">
-      <h3 class="sw-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        Related Articles
-      </h3>
-      <div class="popular-list">${items}</div>
-    </div>`;
+          var b1 =
+            '<div class="pg-banner"><span class="pg-banner-tag">Free Counselling</span><h3>Build a career in ' +
+            esc(cfg.short) +
+            '</h3><p>Talk to a program advisor and get a personalised roadmap.</p>' +
+            '<ul><li>' +
+            CHECK +
+            ' 1:1 mentor guidance</li><li>' +
+            CHECK +
+            ' Live projects &amp; assignments</li><li>' +
+            CHECK +
+            ' Placement support</li></ul>' +
+            '<button class="pgb pgb--yellow pgb--block" type="button" data-open-lead="Get Free Career Counselling">Get Free Counselling</button></div>';
+          var b2 =
+            '<div class="pg-banner pg-banner--light"><span class="pg-banner-tag">Syllabus</span><h3>' +
+            esc(cfg.course ? cfg.course.t : 'Course Curriculum') +
+            '</h3><p>See the complete module-wise curriculum before you enrol.</p><button class="pgb pgb--primary pgb--block" type="button" data-open-lead="Download Curriculum">' +
+            PG.I.dl +
+            ' Download Curriculum</button></div>';
+          return (
+            b1 +
+            b2 +
+            '<div class="sw"><h3 class="sw-title">Categories</h3><div class="cat-list">' +
+            cats +
+            '</div></div><div class="sw"><h3 class="sw-title">Popular Articles</h3><div class="pop-list">' +
+            pop +
+            '</div></div>'
+          );
         }
 
-        /* ---- Popular sidebar ---- */
-        function buildPopularSidebar(excludeId) {
-          const popular = getTrending(5).filter((a) => a.id !== excludeId);
-          const items = popular
-            .map(
-              (a, i) => `
-      <a href="article.html?id=${escapeHtml(a.id)}" class="pop-item">
-        <span class="pop-num">${String(i + 1).padStart(2, '0')}</span>
-        <div>
-          <div class="pop-title">${escapeHtml(a.title)}</div>
-          <div class="pop-meta">${formatDate(a.publishedDate)}</div>
-        </div>
-      </a>`,
-            )
-            .join('');
-          return `<div class="sw">
-      <h3 class="sw-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
-        Popular Posts
-      </h3>
-      <div class="popular-list">${items}</div>
-    </div>`;
-        }
-
-        function buildShareBtns() {
-          return `<div class="share-btns" aria-label="Share this article">
-      <a id="share-tw" href="#" class="share-btn sh-tw" target="_blank" rel="noopener" aria-label="Share on Twitter">
-        ${ICONS['twitter']} Twitter
-      </a>
-      <a id="share-li" href="#" class="share-btn sh-li" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
-        ${ICONS['linkedin']} LinkedIn
-      </a>
-      <button id="share-copy" class="share-btn sh-cp" aria-label="Copy link">
-        ${ICONS['link']} Copy Link
-      </button>
-    </div>`;
-        }
-
-        function wireShareBtns(article) {
-          const url = encodeURIComponent(window.location.href);
-          const title = encodeURIComponent(article.title);
-          const tw = document.getElementById('share-tw');
-          const li = document.getElementById('share-li');
-          const cp = document.getElementById('share-copy');
-          if (tw) tw.href = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
-          if (li) li.href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-          if (cp) {
-            cp.addEventListener('click', function () {
-              navigator.clipboard
-                .writeText(window.location.href)
-                .then(() => {
-                  this.classList.add('copied');
-                  this.innerHTML = ICONS['check'] + ' Copied!';
-                  setTimeout(() => {
-                    this.classList.remove('copied');
-                    this.innerHTML = ICONS['link'] + ' Copy Link';
-                  }, 2000);
-                })
-                .catch(() => {
-                  const ta = document.createElement('textarea');
-                  ta.value = window.location.href;
-                  document.body.appendChild(ta);
-                  ta.select();
-                  document.execCommand('copy');
-                  document.body.removeChild(ta);
-                });
-            });
-          }
-          // Wire the bottom share buttons too
-          const tw2 = document.getElementById('share-tw2');
-          const li2 = document.getElementById('share-li2');
-          const cp2 = document.getElementById('share-copy2');
-          if (tw2) tw2.href = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
-          if (li2) li2.href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-          if (cp2) {
-            cp2.addEventListener('click', function () {
-              navigator.clipboard.writeText(window.location.href).then(() => {
-                this.classList.add('copied');
-                this.innerHTML = ICONS['check'] + ' Copied!';
-                setTimeout(() => {
-                  this.classList.remove('copied');
-                  this.innerHTML = ICONS['link'] + ' Copy Link';
-                }, 2000);
-              });
-            });
-          }
-        }
-
-        /* ---- TOC scroll spy ---- */
-        function initTOCSpy() {
-          const links = document.querySelectorAll('.toc-link[data-toc]');
-          const headings = document.querySelectorAll('.article-body h2[id], .article-body h3[id]');
-          if (!links.length || !headings.length) return;
-
-          const observer = new IntersectionObserver(
-            (entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                  links.forEach((l) => l.classList.remove('active'));
-                  const active = document.querySelector(`.toc-link[data-toc="${entry.target.id}"]`);
-                  if (active) active.classList.add('active');
+        /* ---------- interactions ---------- */
+        function initTocSpy() {
+          var links = Array.prototype.slice.call(document.querySelectorAll('.pg-toc a[data-toc]'));
+          if (!links.length) return;
+          var targets = links
+            .map(function (l) {
+              return document.getElementById(l.dataset.toc);
+            })
+            .filter(Boolean);
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                  links.forEach(function (l) {
+                    l.classList.toggle('active', l.dataset.toc === e.target.id);
+                  });
                 }
               });
             },
-            { rootMargin: '-60px 0px -65% 0px' },
+            { rootMargin: '-70px 0px -70% 0px' },
           );
-
-          headings.forEach((h) => observer.observe(h));
-
-          // Smooth scroll on click
-          links.forEach((link) => {
-            link.addEventListener('click', function (e) {
+          targets.forEach(function (t) {
+            io.observe(t);
+          });
+          links.forEach(function (l) {
+            l.addEventListener('click', function (e) {
               e.preventDefault();
-              const id = this.getAttribute('href').slice(1);
-              const el = document.getElementById(id);
-              if (el) {
-                const y = el.getBoundingClientRect().top + window.scrollY - 80;
-                window.scrollTo({ top: y, behavior: 'smooth' });
-              }
+              var el = document.getElementById(l.dataset.toc);
+              if (el)
+                window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
             });
           });
+          var btn = document.getElementById('pg-toc-btn'),
+            box = document.getElementById('pg-toc');
+          if (btn)
+            btn.addEventListener('click', function () {
+              var open = box.classList.toggle('open');
+              btn.textContent = open ? 'Hide' : 'Show';
+              btn.setAttribute('aria-expanded', String(open));
+            });
         }
-
-        /* ---- Reading progress ---- */
-        function initReadingProgress() {
-          const bar = document.getElementById('reading-bar');
-          const body = document.getElementById('article-main');
+        function initProgress() {
+          var bar = document.getElementById('reading-bar'),
+            body = document.getElementById('pg-body');
           if (!bar || !body) return;
-          function update() {
-            const rect = body.getBoundingClientRect();
-            const height = body.offsetHeight;
-            const scroll = -rect.top;
-            const max = height - window.innerHeight;
-            const pct = max > 0 ? Math.min(100, Math.max(0, (scroll / max) * 100)) : 0;
+          function upd() {
+            var r = body.getBoundingClientRect(),
+              max = body.offsetHeight - window.innerHeight * 0.6;
+            var pct = max > 0 ? Math.min(100, Math.max(0, ((-r.top + window.innerHeight * 0.2) / max) * 100)) : 0;
             bar.style.width = pct + '%';
             bar.setAttribute('aria-valuenow', Math.round(pct));
           }
-          window.addEventListener('scroll', update, { passive: true });
+          window.addEventListener('scroll', upd, { passive: true });
+          upd();
+        }
+        function initDropdown() {
+          var dd = document.getElementById('pg-dd'),
+            btn = document.getElementById('pg-dd-btn');
+          if (!dd) return;
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var o = dd.classList.toggle('open');
+            btn.setAttribute('aria-expanded', String(o));
+          });
+          document.addEventListener('click', function () {
+            dd.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+          });
+          var rb = document.getElementById('pg-rel-btn');
+          if (rb)
+            rb.addEventListener('click', function (e) {
+              var t = document.getElementById('related');
+              if (t && t.style.display !== 'none') {
+                e.preventDefault();
+                window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 20, behavior: 'smooth' });
+              }
+            });
+        }
+        function initForms(articleId) {
+          var df = document.getElementById('pg-dform-f');
+          if (df)
+            df.addEventListener('submit', function (e) {
+              e.preventDefault();
+              var n = document.getElementById('pd-name'),
+                p = document.getElementById('pd-phone'),
+                m = document.getElementById('pd-mail'),
+                msg = document.getElementById('pd-msg');
+              [n, p, m].forEach(function (x) {
+                x.classList.remove('err');
+              });
+              function bad(el, t) {
+                el.classList.add('err');
+                msg.style.color = '#fecaca';
+                msg.textContent = t;
+              }
+              if (n.value.trim().length < 2) return bad(n, 'Please enter your name.');
+              if (!/^\d{10}$/.test(p.value.trim())) return bad(p, 'Enter a valid 10-digit phone number.');
+              if (!/^\S+@\S+\.\S+$/.test(m.value.trim())) return bad(m, 'Enter a valid email address.');
+              msg.style.color = '#bbf7d0';
+              msg.textContent = 'Thanks! We will send the curriculum shortly.';
+              df.reset();
+            });
+          var cf = document.getElementById('pg-cform');
+          if (cf)
+            cf.addEventListener('submit', function (e) {
+              e.preventDefault();
+              var n = document.getElementById('pc-name'),
+                t = document.getElementById('pc-text'),
+                msg = document.getElementById('pc-msg');
+              if (n.value.trim().length < 2 || t.value.trim().length < 3) {
+                msg.style.color = '#dc2626';
+                msg.textContent = 'Please add your name and a comment.';
+                return;
+              }
+              var list = loadComments(articleId);
+              list.unshift({
+                name: n.value.trim(),
+                text: t.value.trim(),
+                date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+              });
+              try {
+                localStorage.setItem(commentsKey(articleId), JSON.stringify(list));
+              } catch (err) {}
+              document.getElementById('pg-clist-wrap').innerHTML = commentsListHTML(list);
+              cf.reset();
+              msg.style.color = '#16a34a';
+              msg.textContent = 'Thanks for your comment!';
+            });
         }
 
-        /* ---- Main render ---- */
-        function renderArticlePage() {
-          const id = getParam('id');
-          const article = id ? getArticleById(id) : null;
-
-          if (!article) {
-            document.body.innerHTML = `<div class="container" style="padding:80px 20px;text-align:center;">
-        <h1 style="font-size:2rem;margin-bottom:12px;">Article Not Found</h1>
-        <p style="color:var(--gray-500);margin-bottom:24px;">The article you're looking for doesn't exist.</p>
-        <a href="index.html" class="btn btn-primary">← Back to Blog</a>
-      </div>`;
+        /* ---------- render ---------- */
+        function render() {
+          var a = param('id') ? getArticleById(param('id')) : null;
+          if (!a) {
+            document.body.innerHTML =
+              '<div class="pg-wrap" style="padding:80px 0;text-align:center"><h1 style="font-size:2rem;margin-bottom:12px">Article Not Found</h1><p style="color:#6b7280;margin-bottom:24px">The article you are looking for does not exist.</p><a href="index.html" class="pgb pgb--primary">← Back to Blog</a></div>';
             return;
           }
+          var cat = getCategoryForArticle(a),
+            auth = getAuthorForArticle(a),
+            cfg = PG.cfgFor(cat.id);
+          document.title = a.title + ' — WsCube Tech Blog';
+          document.getElementById('page-desc').content = a.excerpt || '';
 
-          const cat = getCategoryForArticle(article);
-          const auth = getAuthorForArticle(article);
-          const catColor = cat ? cat.color : '#194cff';
-          const catBg = cat ? cat.bgColor : '#e8edff';
-          const catName = cat ? cat.name : '';
-          const catId = cat ? cat.id : '';
-
-          /* Meta */
-          document.title = `${article.title} — WsCube Tech Blog`;
-          document.getElementById('page-desc').content = article.excerpt || '';
-
-          /* ---- Header ---- */
-          const headerWrap = document.getElementById('article-header-wrap');
-          if (headerWrap) {
-            headerWrap.innerHTML = `<div class="article-header">
-        <div class="container">
-          <nav class="breadcrumb" aria-label="Breadcrumb">
-            <a href="index.html">Home</a>
-            <span class="bc-sep" aria-hidden="true">›</span>
-            <a href="category.html?id=${escapeHtml(catId)}">${escapeHtml(catName)}</a>
-            <span class="bc-sep" aria-hidden="true">›</span>
-            <span class="bc-cur">${escapeHtml(article.title.length > 48 ? article.title.slice(0, 46) + '…' : article.title)}</span>
-          </nav>
-          <a href="category.html?id=${escapeHtml(catId)}" class="art-cat-badge" style="background:${catBg};color:${catColor};">${escapeHtml(catName)}</a>
-          <h1 class="article-title">${escapeHtml(article.title)}</h1>
-          <p class="article-excerpt">${escapeHtml(article.excerpt)}</p>
-          <div class="art-meta">
-            <div class="art-author" aria-label="Author">
-              <img src="${escapeHtml(auth ? auth.avatar : 'assets/images/authors/default.svg')}"
-                   alt="${escapeHtml(auth ? auth.name : '')}"
-                   loading="lazy"
-                   onerror="this.src='assets/images/authors/default.svg'" />
-              <div>
-                <div class="art-author-name">${escapeHtml(auth ? auth.name : '')}</div>
-                <div class="art-author-role">${escapeHtml(auth ? auth.role : '')}</div>
-              </div>
-            </div>
-            <div class="art-sep" aria-hidden="true"></div>
-            <div class="art-meta-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <span>${formatDate(article.publishedDate)}</span>
-            </div>
-            <div class="art-sep" aria-hidden="true"></div>
-            <div class="art-meta-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span>${article.readingTime} min read</span>
-            </div>
-            ${buildShareBtns()}
-          </div>
-        </div>
-      </div>`;
-          }
-
-          /* ---- Featured image + body ---- */
-          const main = document.getElementById('article-main');
-          if (!main) return;
-
-          const tags = (article.tags || [])
-            .map((t) => `<a href="category.html?id=${escapeHtml(catId)}" class="tag-pill">${escapeHtml(t)}</a>`)
+          var parts = splitContent(a.content);
+          var items = tocItems(parts.body, parts.faqs.length > 0, true);
+          var tags = (a.tags || [])
+            .map(function (t) {
+              return '<a href="category.html?id=' + esc(cat.id) + '">#' + esc(t) + '</a>';
+            })
             .join('');
 
-          const authorBio = auth
-            ? `<div class="author-bio">
-      <img src="${escapeHtml(auth.avatar)}" alt="${escapeHtml(auth.name)}" loading="lazy" onerror="this.src='assets/images/authors/default.svg'" />
-      <div>
-        <div class="ab-label">Written by</div>
-        <div class="ab-name">${escapeHtml(auth.name)}</div>
-        <div class="ab-role">${escapeHtml(auth.role)}</div>
-        <p class="ab-text">${escapeHtml(auth.bio)}</p>
-      </div>
-    </div>`
-            : '';
+          document.getElementById('art-hero').innerHTML = heroHTML(a, cat, auth, cfg);
+          document.getElementById('art-layout').innerHTML =
+            '<aside class="pg-toc-rail" aria-label="Table of contents">' +
+            tocHTML(items) +
+            '</aside>' +
+            '<main class="pg-art-main"><div class="pg-art-card"><img class="pg-feat" src="' +
+            esc(a.image) +
+            '" alt="' +
+            esc(a.imageAlt || a.title) +
+            '" onerror="this.style.display=\'none\'" />' +
+            '<article class="article-body" id="pg-body">' +
+            bodyHTML(parts.body, cfg, cat) +
+            '</article>' +
+            (parts.faqs.length
+              ? '<section class="pg-faq" id="faqs"><h2 class="pg-h2" style="margin-bottom:16px">Frequently Asked Questions</h2>' +
+                PG.faqHTML(parts.faqs, 'af-') +
+                '</section>'
+              : '') +
+            '<div class="pg-tags">' +
+            tags +
+            '</div></div>' +
+            authorsHTML(auth) +
+            '<div class="pg-art-foot" style="border-top:0;padding-top:0;margin-bottom:6px">' +
+            PG.shareHTML(a.title) +
+            '</div>' +
+            commentsHTML(a.id) +
+            '</main>' +
+            '<aside class="pg-art-side" aria-label="Sidebar">' +
+            sideHTML(a, cat, cfg) +
+            '</aside>';
 
-          const shareBtmBtns = `<div class="share-bottom">
-      <span class="share-bottom-lbl">Share this article:</span>
-      <a id="share-tw2" href="#" class="share-btn sh-tw" target="_blank" rel="noopener">${ICONS['twitter']} Twitter</a>
-      <a id="share-li2" href="#" class="share-btn sh-li" target="_blank" rel="noopener">${ICONS['linkedin']} LinkedIn</a>
-      <button id="share-copy2" class="share-btn sh-cp">${ICONS['link']} Copy Link</button>
-    </div>`;
-
-          main.innerHTML = `
-      <img
-        class="art-feat-img"
-        src="${escapeHtml(article.image)}"
-        alt="${escapeHtml(article.imageAlt || article.title)}"
-        loading="eager"
-        onerror="this.style.display='none'"
-      />
-      <div class="article-layout">
-        <article class="article-body">
-          ${renderArticleContent(article.content)}
-          <div class="art-tags">
-            <span class="art-tags-lbl">${ICONS['tag']} Tags:</span>
-            ${tags}
-          </div>
-          ${authorBio}
-          ${shareBtmBtns}
-        </article>
-        <aside class="article-sidebar" aria-label="Article sidebar">
-          ${buildTOC(article.content)}
-          ${buildRelatedSidebar(article.id, article.category)}
-          ${buildPopularSidebar(article.id)}
-        </aside>
-      </div>`;
-
-          /* ---- Related articles section ---- */
-          const relGrid = document.getElementById('related-grid');
-          if (relGrid) {
-            const related = getArticlesByCategory(article.category)
-              .filter((a) => a.id !== article.id)
-              .slice(0, 3);
-            if (related.length) {
-              relGrid.innerHTML = related.map((a) => renderArticleCard(a)).join('');
-            } else {
-              document.getElementById('related-section').style.display = 'none';
-            }
+          var rel = getArticlesByCategory(a.category).filter(function (x) {
+            return x.id !== a.id;
+          });
+          if (rel.length < 3)
+            rel = rel.concat(
+              getLatest(8).filter(function (x) {
+                return x.id !== a.id && rel.indexOf(x) < 0;
+              }),
+            );
+          rel = rel.slice(0, 3);
+          if (rel.length) {
+            document.getElementById('related-grid').innerHTML = rel
+              .map(function (x) {
+                return renderArticleCard(x);
+              })
+              .join('');
+            document.getElementById('related').style.display = '';
           }
 
-          /* ---- Wire up interactions ---- */
-          wireShareBtns(article);
-          initReadingProgress();
-          requestAnimationFrame(() => {
-            initTOCSpy();
-          });
+          PG.wireCopy();
+          initTocSpy();
+          initProgress();
+          initDropdown();
+          initForms(a.id);
+          PG.initLeadModal();
+          PG.initFloaters();
+          if (location.hash)
+            setTimeout(function () {
+              var t = document.getElementById(location.hash.slice(1));
+              if (t) window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 80 });
+            }, 250);
         }
-
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', renderArticlePage);
-        } else {
-          renderArticlePage();
-        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render);
+        else render();
       })();
     </script>
   </body>

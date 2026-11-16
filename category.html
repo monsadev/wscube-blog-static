@@ -8,278 +8,560 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="assets/css/blog.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
   </head>
   <body>
-    <div style="background: var(--white); border-bottom: 1px solid var(--border); padding: 0">
-      <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <a href="index.html">Home</a>
-          <span class="bc-sep" aria-hidden="true">›</span>
-          <span class="bc-cur" id="bc-cat">Category</span>
-        </nav>
+    <!-- HERO -->
+    <header class="pg-hero" id="cat-hero"></header>
+
+    <!-- MAIN: posts, topics, interview + sidebar -->
+    <div class="pg-wrap pg-main-wrap">
+      <div class="pg-layout">
+        <main class="pg-content" id="cat-content"></main>
+        <aside class="pg-side" id="cat-side" aria-label="Sidebar"></aside>
       </div>
     </div>
 
-    <!-- Category banner -->
-    <div id="cat-banner-wrap"></div>
-
-    <!-- Articles + Sidebar -->
-    <div class="container">
-      <div class="cat-page-layout">
-        <!-- Main -->
-        <main id="cat-main" aria-label="Articles">
-          <div id="filter-bar" class="filter-bar" role="toolbar" aria-label="Filter and sort articles"></div>
-          <div id="articles-grid" class="articles-grid-2" aria-live="polite" aria-label="Article listing"></div>
-          <div id="pagination" class="pagination" role="navigation" aria-label="Page navigation"></div>
-        </main>
-
-        <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar" aria-label="Sidebar">
-          <!-- Populated by JS -->
-        </aside>
-      </div>
-    </div>
+    <!-- FULL WIDTH SECTIONS (rendered by JS) -->
+    <div id="cat-sections"></div>
 
     <script src="assets/js/data.js"></script>
     <script src="assets/js/render.js"></script>
     <script src="assets/js/search.js"></script>
+    <script src="assets/js/shared.js"></script>
     <script>
       (function () {
         'use strict';
+        var PER = 6;
+        var esc = escapeHtml;
+        var state = { cat: null, cfg: null, arts: [], shown: PER, synthetic: false };
 
-        const PER_PAGE = 6;
-        let state = { page: 1, tag: 'all', sort: 'newest', articles: [], filtered: [], cat: null };
-
-        function getParam(k) {
+        function param(k) {
           return new URLSearchParams(location.search).get(k);
         }
-
-        /* ---- Banner ---- */
-        function renderBanner() {
-          const c = state.cat;
-          const wrap = document.getElementById('cat-banner-wrap');
-          if (!wrap || !c) return;
-          const catIcon = ICONS[c.id] || ICONS['grid'];
-          wrap.innerHTML = `<div class="cat-banner" style="background:${c.color};">
-      <div class="container">
-        <div class="cat-banner-in">
-          <div class="cat-banner-icon">${catIcon}</div>
-          <div>
-            <h1 class="cat-banner-name">${escapeHtml(c.name)}</h1>
-            <p class="cat-banner-desc">${escapeHtml(c.description)}</p>
-            <span class="cat-count-badge">${state.articles.length} Articles</span>
-          </div>
-        </div>
-      </div>
-    </div>`;
+        function titleCase(s) {
+          return s.replace(/-/g, ' ').replace(/\b\w/g, function (m) {
+            return m.toUpperCase();
+          });
         }
 
-        /* ---- Filter bar ---- */
-        function renderFilterBar() {
-          const el = document.getElementById('filter-bar');
-          if (!el) return;
-          const tags = new Set(['all']);
-          state.articles.forEach((a) => (a.tags || []).forEach((t) => tags.add(t)));
-          const tagBtns = Array.from(tags)
-            .map(
-              (t) =>
-                `<button class="filter-tag${t === state.tag ? ' active' : ''}"
-        onclick="setState('tag','${escapeHtml(t)}')"
-        aria-pressed="${t === state.tag}"
-      >${t === 'all' ? 'All' : escapeHtml(t)}</button>`,
-            )
-            .join('');
-          const sortSel = `<select class="filter-sort" id="filter-sort" aria-label="Sort articles" onchange="setState('sort',this.value)">
-      <option value="newest"${state.sort === 'newest' ? ' selected' : ''}>Newest First</option>
-      <option value="oldest"${state.sort === 'oldest' ? ' selected' : ''}>Oldest First</option>
-      <option value="reading"${state.sort === 'reading' ? ' selected' : ''}>Reading Time</option>
-    </select>`;
-          el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;width:100%;">${tagBtns}${sortSel}</div>`;
+        /* ---------- resolve category (unknown ids still get a page) ---------- */
+        function resolveCategory() {
+          var id = param('id') || getCategories()[0].id;
+          var cat = getCategoryById(id);
+          if (cat) return cat;
+          var name = PG.RELATED_NAMES[id] || titleCase(id);
+          state.synthetic = true;
+          return {
+            id: id,
+            name: name,
+            color: '#194cff',
+            bgColor: '#e8edff',
+            description:
+              'Practical guides, tools and strategies on ' +
+              name +
+              '. Learn the fundamentals, follow expert-written tutorials and build job-ready skills step by step.',
+          };
+        }
+        function findArticles(cat) {
+          var list = getArticlesByCategory(cat.id);
+          if (!list.length && state.synthetic) list = searchArticles(cat.name.split(' ')[0]) || [];
+          return list.slice().sort(function (a, b) {
+            return new Date(b.publishedDate) - new Date(a.publishedDate);
+          });
+        }
+        function ctaBtns(light) {
+          var s = '';
+          if (state.cfg.curriculum)
+            s +=
+              '<button class="pgb ' +
+              (light ? 'pgb--ghost' : 'pgb--ghost') +
+              '" type="button" data-open-lead="Download Curriculum">' +
+              PG.I.dl +
+              ' Download Curriculum</button>';
+          return s;
         }
 
-        /* ---- Apply filters & sort ---- */
-        function applyFilters() {
-          let r = [...state.articles];
-          if (state.tag !== 'all') r = r.filter((a) => (a.tags || []).includes(state.tag));
-          if (state.sort === 'newest') r.sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate));
-          if (state.sort === 'oldest') r.sort((a, b) => new Date(a.publishedDate) - new Date(b.publishedDate));
-          if (state.sort === 'reading') r.sort((a, b) => (a.readingTime || 0) - (b.readingTime || 0));
-          state.filtered = r;
-          state.page = 1;
+        /* ---------- HERO ---------- */
+        function renderHero() {
+          var c = state.cat,
+            cfg = state.cfg;
+          var icon = ICONS[c.id] || ICONS['grid'];
+          var avg = state.arts.length
+            ? Math.round(
+                state.arts.reduce(function (s, a) {
+                  return s + (a.readingTime || 0);
+                }, 0) / state.arts.length,
+              )
+            : 0;
+          var actions = '';
+          if (cfg.course)
+            actions +=
+              '<a class="pgb pgb--primary" href="' +
+              esc(cfg.course.href) +
+              '" target="_blank" rel="noopener">' +
+              esc(cfg.course.t) +
+              ' ' +
+              PG.I.arrow +
+              '</a>';
+          actions += ctaBtns();
+          if (!actions)
+            actions = '<a class="pgb pgb--primary" href="#latest">Browse latest posts ' + PG.I.arrow + '</a>';
+          document.getElementById('cat-hero').innerHTML =
+            '<div class="pg-wrap"><nav class="pg-bc" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">›</span><a href="index.html#categories">Blog</a><span aria-hidden="true">›</span><span class="pg-bc-cur">' +
+            esc(c.name) +
+            '</span></nav>' +
+            '<div class="pg-hero-grid"><div><span class="pg-pill"><i></i>Category</span>' +
+            '<h1 class="pg-title">' +
+            esc(c.name) +
+            ' Blogs</h1>' +
+            '<p class="pg-intro">' +
+            esc(c.description) +
+            ' Explore in-depth guides, step-by-step tutorials and expert tips from the WsCube Tech team, and keep learning at your own pace with free, regularly updated content.</p>' +
+            '<div class="pg-hero-actions">' +
+            actions +
+            '</div></div>' +
+            '<div class="pg-hero-card"><div class="pg-hero-card-top"><span class="pg-cat-ico" style="background:' +
+            c.bgColor +
+            ';color:' +
+            c.color +
+            '">' +
+            icon +
+            '</span>' +
+            '<div><b>' +
+            esc(c.name) +
+            '</b><span>Free expert-written guides</span></div></div>' +
+            '<div class="pg-hero-stats"><div><b>' +
+            state.arts.length +
+            '</b><span>Articles</span></div><div><b>' +
+            (avg || '—') +
+            (avg ? 'm' : '') +
+            '</b><span>Avg. read</span></div><div><b>100%</b><span>Free</span></div></div></div>' +
+            '</div></div>';
         }
 
-        /* ---- Render articles ---- */
-        function renderArticles() {
-          const el = document.getElementById('articles-grid');
-          if (!el) return;
-          const start = (state.page - 1) * PER_PAGE;
-          const slice = state.filtered.slice(start, start + PER_PAGE);
-          if (!slice.length) {
-            el.innerHTML = `<div style="grid-column:1/-1;padding:48px 0;text-align:center;color:var(--gray-400);">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:.4;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <strong style="display:block;color:var(--gray-600);margin-bottom:4px;">No articles found</strong>
-        Try a different filter or tag.
-      </div>`;
-            return;
-          }
-          el.innerHTML = slice.map((a) => renderArticleCard(a)).join('');
-        }
-
-        /* ---- Pagination ---- */
-        function renderPagination() {
-          const el = document.getElementById('pagination');
-          if (!el) return;
-          const total = Math.ceil(state.filtered.length / PER_PAGE);
-          if (total <= 1) {
-            el.innerHTML = '';
-            return;
-          }
-          let html = `<button class="pg-btn" onclick="goPage(${state.page - 1})" ${state.page === 1 ? 'disabled' : ''} aria-label="Previous">‹</button>`;
-          for (let i = 1; i <= total; i++) {
-            if (i === 1 || i === total || Math.abs(i - state.page) <= 1) {
-              html += `<button class="pg-btn${i === state.page ? ' active' : ''}" onclick="goPage(${i})" aria-label="Page ${i}" ${i === state.page ? 'aria-current="page"' : ''}>${i}</button>`;
-            } else if (Math.abs(i - state.page) === 2) {
-              html += `<span style="padding:0 4px;color:var(--gray-400);">…</span>`;
-            }
-          }
-          html += `<button class="pg-btn" onclick="goPage(${state.page + 1})" ${state.page === total ? 'disabled' : ''} aria-label="Next">›</button>`;
-          el.innerHTML = html;
-        }
-
-        /* ---- Sidebar ---- */
-        function renderSidebar() {
-          const el = document.getElementById('sidebar');
-          if (!el) return;
-          const popular = [...state.articles]
-            .sort((a, b) => new Date(b.publishedDate) - new Date(a.publishedDate))
-            .slice(0, 5);
-
-          const popularHtml = popular
-            .map(
-              (a, i) => `
-      <a href="article.html?id=${escapeHtml(a.id)}" class="pop-item">
-        <span class="pop-num">${String(i + 1).padStart(2, '0')}</span>
-        <div>
-          <div class="pop-title">${escapeHtml(a.title)}</div>
-          <div class="pop-meta">${formatDate(a.publishedDate)}</div>
-        </div>
-      </a>`,
-            )
-            .join('');
-
-          const catListHtml = getCategories()
-            .map(
-              (c) => `
-      <a href="category.html?id=${escapeHtml(c.id)}"
-         class="cat-li${state.cat && c.id === state.cat.id ? ' active' : ''}">
-        <span class="cat-li-name">
-          <span style="color:${c.color}">${ICONS[c.id] || ''}</span>
-          ${escapeHtml(c.name)}
-        </span>
-        <span class="cat-li-count">${c.articleCount}</span>
-      </a>`,
-            )
-            .join('');
-
-          el.innerHTML = `
-      <div class="sw">
-        <h3 class="sw-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          Search Articles
-        </h3>
-        <div class="sb-search">
-          <input type="search" id="sb-search-input" placeholder="Search..." aria-label="Search articles" />
-          <button id="sb-search-btn" aria-label="Search">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          </button>
-        </div>
-      </div>
-      <div class="sw">
-        <h3 class="sw-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
-          Popular in Category
-        </h3>
-        <div class="pop-list">${popularHtml}</div>
-      </div>
-      <div class="sw">
-        <h3 class="sw-title">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          All Categories
-        </h3>
-        <div class="cat-list">${catListHtml}</div>
-      </div>
-      <div class="sb-nwl">
-        <div class="sb-nwl-title">Get Weekly Insights</div>
-        <p class="sb-nwl-sub">Join 50,000+ learners who get our best articles every week.</p>
-        <a href="index.html#newsletter" class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.12);font-size:.75rem;padding:8px 18px;">Subscribe Free</a>
-      </div>`;
-
-          // Wire sidebar search
-          const sbInput = document.getElementById('sb-search-input');
-          const sbBtn = document.getElementById('sb-search-btn');
-          if (sbBtn && sbInput) {
-            const go = () => {
-              const q = sbInput.value.trim();
-              if (q) {
-                sessionStorage.setItem('wscube_q', q);
-                location.href = 'index.html';
-              }
-            };
-            sbBtn.addEventListener('click', go);
-            sbInput.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter') go();
-            });
-          }
-        }
-
-        /* ---- Global state setter (called from inline onclick) ---- */
-        window.setState = function (key, val) {
-          state[key] = val;
-          applyFilters();
-          renderFilterBar();
-          renderArticles();
-          renderPagination();
-        };
-        window.goPage = function (n) {
-          const total = Math.ceil(state.filtered.length / PER_PAGE);
-          if (n < 1 || n > total) return;
-          state.page = n;
-          renderArticles();
-          renderPagination();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        /* ---- Boot ---- */
-        function boot() {
-          const catId = getParam('id');
-          const cat = catId ? getCategoryById(catId) : getCategories()[0];
-          if (!cat) {
-            document.body.innerHTML =
-              '<div class="container" style="padding:80px 0;text-align:center;"><h1>Category not found</h1><a href="index.html" class="btn btn-primary" style="margin-top:20px;">← Back Home</a></div>';
-            return;
-          }
-          state.cat = cat;
-          state.articles = getArticlesByCategory(cat.id).sort(
-            (a, b) => new Date(b.publishedDate) - new Date(a.publishedDate),
+        /* ---------- inline CTA ---------- */
+        function ctaBand(title, text, primaryLabel, primaryCourse) {
+          var second = '';
+          if (primaryCourse && state.cfg.course)
+            second =
+              '<a class="pgb pgb--ghost" href="' +
+              esc(state.cfg.course.href) +
+              '" target="_blank" rel="noopener">View Course Details</a>';
+          else if (state.cfg.curriculum)
+            second =
+              '<button class="pgb pgb--ghost" type="button" data-open-lead="Download Curriculum">' +
+              PG.I.dl +
+              ' Download Curriculum</button>';
+          var chips = primaryCourse
+            ? ['Live mentor-led classes', 'Real-world projects', 'Placement support']
+            : ['1:1 expert guidance', 'Personalised roadmap', '100% free'];
+          var tick = PG.svg('<polyline points="20 6 9 17 4 12"/>', 12);
+          return (
+            '<div class="pg-cta"><div class="pg-cta-txt"><span class="pg-cta-pill">' +
+            (primaryCourse ? 'Live Online Program' : 'Free Counselling') +
+            '</span>' +
+            '<h3>' +
+            title +
+            '</h3><p>' +
+            text +
+            '</p>' +
+            '<ul class="pg-cta-chips">' +
+            chips
+              .map(function (c) {
+                return '<li><i>' + tick + '</i>' + c + '</li>';
+              })
+              .join('') +
+            '</ul></div>' +
+            '<div class="pg-cta-act"><button class="pgb pgb--yellow" type="button" data-open-lead="' +
+            esc(primaryLabel) +
+            '">' +
+            esc(primaryLabel) +
+            ' ' +
+            PG.I.arrow +
+            '</button>' +
+            second +
+            '</div></div>'
           );
+        }
+        /* ---------- latest posts ---------- */
+        function postsHTML() {
+          var c = state.cat;
+          var list = state.arts.slice(0, state.shown);
+          var body = list.length
+            ? '<div class="pg-posts" id="pg-posts">' +
+              list
+                .map(function (a) {
+                  return renderArticleCard(a);
+                })
+                .join('') +
+              '</div>'
+            : '<p class="pg-sub">New ' +
+              esc(c.name) +
+              ' guides are on the way. Meanwhile, explore our latest posts across all categories.</p><div class="pg-posts" id="pg-posts">' +
+              getLatest(4)
+                .map(function (a) {
+                  return renderArticleCard(a);
+                })
+                .join('') +
+              '</div>';
+          var more =
+            state.arts.length > state.shown
+              ? '<div class="pg-loadmore" id="pg-loadmore"><button class="pgb pgb--ghost" type="button" id="pg-load">Load more articles</button></div>'
+              : '<div class="pg-loadmore" id="pg-loadmore"></div>';
+          return (
+            '<section class="pg-block" id="latest"><div class="pg-block-head"><div><span class="pg-eyebrow">Fresh Reads</span><h2 class="pg-h2">Latest ' +
+            esc(c.name) +
+            ' Posts</h2></div></div>' +
+            body +
+            more +
+            '</section>'
+          );
+        }
 
-          document.title = `${cat.name} Articles — WsCube Tech Blog`;
+        /* ---------- topic wise reads (doc links to headings) ---------- */
+        function topicsHTML() {
+          var c = state.cat;
+          var list = state.arts.slice(0, 6);
+          if (!list.length) return '';
+          var cards = list
+            .map(function (a, i) {
+              var heads = (a.content || [])
+                .filter(function (b) {
+                  return b.type === 'heading' && b.level === 2 && !/faq|frequently/i.test(b.text || '');
+                })
+                .slice(0, 5);
+              var lis = heads
+                .map(function (h) {
+                  return (
+                    '<li><a href="article.html?id=' +
+                    esc(a.id) +
+                    '#' +
+                    slugify(h.text) +
+                    '">' +
+                    esc(h.text) +
+                    '</a></li>'
+                  );
+                })
+                .join('');
+              return (
+                '<div class="pg-topic"><div class="pg-topic-head"><span class="pg-topic-n">' +
+                String(i + 1).padStart(2, '0') +
+                '</span><a href="article.html?id=' +
+                esc(a.id) +
+                '">' +
+                esc(a.title) +
+                '</a></div><ul>' +
+                lis +
+                '</ul></div>'
+              );
+            })
+            .join('');
+          return (
+            '<section class="pg-block" id="topics"><div class="pg-block-head"><div><span class="pg-eyebrow">Topic Wise</span><h2 class="pg-h2">' +
+            esc(c.name) +
+            ' Reads by Topic</h2><p class="pg-sub">Jump straight to the section you need inside each guide.</p></div></div><div class="pg-topics">' +
+            cards +
+            '</div></section>'
+          );
+        }
+
+        /* ---------- interview questions ---------- */
+        function interviewHTML() {
+          if (state.cat.id === 'interview-questions') return '';
+          var list = getArticlesByCategory('interview-questions');
+          if (!list.length) return '';
+          var rows = list
+            .map(function (a, i) {
+              var n = 0;
+              (a.content || []).forEach(function (b) {
+                if (b.type === 'faq') n += (b.items || []).length;
+              });
+              return (
+                '<a href="article.html?id=' +
+                esc(a.id) +
+                '"><span class="pg-iq-n">' +
+                String(i + 1).padStart(2, '0') +
+                '</span><span class="pg-iq-body"><b>' +
+                esc(a.title) +
+                '</b><span>' +
+                (n ? n + ' questions and answers · ' : '') +
+                (a.readingTime || 5) +
+                ' min read</span></span><span class="pg-iq-go">→</span></a>'
+              );
+            })
+            .join('');
+          return (
+            '<section class="pg-block" id="interview"><div class="pg-block-head"><div><span class="pg-eyebrow">Crack the Interview</span><h2 class="pg-h2">Interview Questions Blogs</h2></div><a class="pg-more" href="category.html?id=interview-questions">View all →</a></div><div class="pg-iq">' +
+            rows +
+            '</div></section>'
+          );
+        }
+
+        function contentHTML() {
+          var c = state.cat,
+            cfg = state.cfg;
+          var cta1 = ctaBand(
+            'Not sure where to begin with ' + esc(c.name) + '?',
+            'Talk to a program advisor and get a free, personalised learning path.',
+            'Get Free Career Counselling',
+            false,
+          );
+          var cta2 = cfg.course
+            ? ctaBand(
+                'Learn ' + esc(cfg.short) + ' with live mentors',
+                'Join the ' + esc(cfg.course.t) + ' with projects, assignments and placement support.',
+                'Book Free Demo Class',
+                true,
+              )
+            : ctaBand(
+                'Ready to start your career journey?',
+                'Get 1:1 guidance from our program advisors and pick the right course for you.',
+                'Talk to an Advisor',
+                false,
+              );
+          return postsHTML() + cta1 + topicsHTML() + interviewHTML() + cta2;
+        }
+
+        /* ---------- sidebar ---------- */
+        function sideHTML() {
+          var c = state.cat,
+            cfg = state.cfg;
+          var pop = state.arts.slice(0, 5);
+          if (pop.length < 3) pop = getTrending(5);
+          var popular = pop
+            .map(function (a, i) {
+              return (
+                '<a href="article.html?id=' +
+                esc(a.id) +
+                '" class="pop-item"><span class="pop-num">' +
+                String(i + 1).padStart(2, '0') +
+                '</span><div><div class="pop-title">' +
+                esc(a.title) +
+                '</div><div class="pop-meta">' +
+                formatDate(a.publishedDate) +
+                '</div></div></a>'
+              );
+            })
+            .join('');
+          var cats = getCategories()
+            .map(function (x) {
+              return (
+                '<a href="category.html?id=' +
+                esc(x.id) +
+                '" class="cat-li' +
+                (x.id === c.id ? ' active' : '') +
+                '"><span class="cat-li-name"><span style="color:' +
+                x.color +
+                '">' +
+                (ICONS[x.id] || '') +
+                '</span>' +
+                esc(x.name) +
+                '</span><span class="cat-li-count">' +
+                getArticlesByCategory(x.id).length +
+                '</span></a>'
+              );
+            })
+            .join('');
+          var check = PG.svg('<polyline points="20 6 9 17 4 12"/>', 15);
+          var banner =
+            '<div class="pg-banner"><span class="pg-banner-tag">Free Counselling</span><h3>Build a career in ' +
+            esc(cfg.short) +
+            '</h3><p>Get a personalised roadmap from our program advisors.</p>' +
+            '<ul><li>' +
+            check +
+            ' 1:1 mentor guidance</li><li>' +
+            check +
+            ' Live projects &amp; assignments</li><li>' +
+            check +
+            ' Placement support</li></ul>' +
+            '<button class="pgb pgb--yellow pgb--block" type="button" data-open-lead="Get Free Career Counselling">Get Free Counselling</button></div>';
+          var banner2 = cfg.curriculum
+            ? '<div class="pg-banner pg-banner--light"><span class="pg-banner-tag">Syllabus</span><h3>' +
+              esc(cfg.course.t) +
+              '</h3><p>See the complete module-wise curriculum before you enrol.</p><button class="pgb pgb--primary pgb--block" type="button" data-open-lead="Download Curriculum">' +
+              PG.I.dl +
+              ' Download Curriculum</button></div>'
+            : '';
+          return (
+            banner +
+            banner2 +
+            '<div class="sw"><h3 class="sw-title">Popular in ' +
+            esc(c.name) +
+            '</h3><div class="pop-list">' +
+            popular +
+            '</div></div>' +
+            '<div class="sw"><h3 class="sw-title">All Categories</h3><div class="cat-list">' +
+            cats +
+            '</div></div>'
+          );
+        }
+
+        /* ---------- full-width sections ---------- */
+        function relatedHTML() {
+          var cfg = state.cfg;
+          var items = cfg.related
+            .map(function (id) {
+              var real = getCategoryById(id);
+              var name = real ? real.name : PG.RELATED_NAMES[id] || titleCase(id);
+              var color = '#194cff',
+                bg = '#e8edff';
+              var icon = ICONS[id] || ICONS['grid'];
+              return (
+                '<a href="category.html?id=' +
+                esc(id) +
+                '"><span class="pg-rel-ico" style="--c:' +
+                color +
+                ';--bg:' +
+                bg +
+                '">' +
+                icon +
+                '</span>' +
+                esc(name) +
+                '<em>→</em></a>'
+              );
+            })
+            .join('');
+          var out =
+            '<section class="pg-sec" id="related"><div class="pg-wrap"><div class="pg-sec-head"><div><span class="pg-eyebrow">Keep Exploring</span><h2 class="pg-h2">Related Categories</h2></div></div><div class="pg-rel">' +
+            items +
+            '</div>';
+          if (cfg.cities) {
+            var pin = PG.svg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>', 20);
+            var tiles = PG.CITIES.map(function (ct, i) {
+              return '<a class="pg-city' + (i >= 8 ? ' is-extra' : '') + '" href="#" data-open-lead="Get Free Career Counselling"><span class="pg-city-ico">' + pin + '</span><span class="pg-city-t"><b>' + ct + '</b><small>' + esc(cfg.short) + ' Course</small></span><em aria-hidden="true">→</em></a>';
+            }).join('');
+            out +=
+              '<div class="pg-cities-panel" id="pg-cities"><div class="pg-cities-head"><div><span class="pg-eyebrow">Near You</span><h2 class="pg-h2">' + esc(state.cat.name) + ' Courses by City</h2>' +
+              '<p class="pg-sub">Find ' + esc(cfg.short) + ' training programs in your city.</p></div>' +
+              '<button class="pgb pgb--ghost pgb--sm" type="button" id="pg-cities-btn" aria-expanded="false">Show all ' + PG.CITIES.length + ' cities</button></div>' +
+              '<div class="pg-cities">' + tiles + '</div></div>';
+          }          return out + '</div></section>';
+        }
+        function seoHTML() {
+          var c = state.cat,
+            n = esc(c.name);
+          return (
+            '<section class="pg-sec pg-sec--alt" id="about"><div class="pg-wrap"><div class="pg-seo" id="pg-seo"><div class="pg-seo-body">' +
+            '<h2>' +
+            n +
+            ' Blogs by WsCube Tech</h2>' +
+            '<p>Our ' +
+            n +
+            ' blog collects practical, expert-written content for beginners and working professionals. Every article is researched, structured with clear headings and updated regularly so you always learn current best practices.</p>' +
+            '<h3>What you will learn</h3>' +
+            '<p>From core concepts and tools to real-world examples, step-by-step workflows and career advice, these guides help you build a solid foundation in ' +
+            n +
+            ' and apply it on real projects.</p>' +
+            '<h3>Who is this for?</h3>' +
+            '<p>Students, freshers, career switchers and professionals who want to upskill. No prior experience is required for most guides, and advanced readers will find deep dives, comparison tables and interview-focused material.</p>' +
+            '<h3>Go beyond reading</h3>' +
+            '<p>If you want structured learning, mentor feedback and placement support, explore the online programs from WsCube Tech. You can download the curriculum, attend a free masterclass or talk to a program advisor for a personalised roadmap.</p>' +
+            '</div><button class="pg-seo-btn" type="button" id="pg-seo-btn" aria-expanded="false">Read more</button></div></div></section>'
+          );
+        }
+        function faqSectionHTML() {
+          var items = PG.faqsFromArticles(state.arts, 8);
+          if (items.length < 3) {
+            var n = state.cat.name;
+            items = [
+              {
+                question: 'Is the ' + n + ' content on this blog free?',
+                answer: 'Yes. All articles are free to read and updated regularly by our expert writers.',
+              },
+              {
+                question: 'I am a beginner. Where should I start with ' + n + '?',
+                answer:
+                  'Start with the latest beginner guides in this category, then follow the topic-wise reads to go deeper.',
+              },
+              {
+                question: 'Does WsCube Tech offer a course on ' + n + '?',
+                answer:
+                  'Yes. Check the online programs section on this page or talk to a program advisor for a personalised recommendation.',
+              },
+              {
+                question: 'Can I get a certificate?',
+                answer: 'Our online programs include a certificate on completion. Blog articles are for self-learning.',
+              },
+            ];
+          }
+          return (
+            '<section class="pg-sec" id="faqs"><div class="pg-wrap" style="max-width:900px"><div class="pg-sec-head"><div><span class="pg-eyebrow">Got Questions?</span><h2 class="pg-h2">Frequently Asked Questions</h2></div></div>' +
+            PG.faqHTML(items, 'cf-') +
+            '</div></section>'
+          );
+        }
+        function storiesSectionHTML() {
+          return (
+            '<section class="pg-sec pg-sec--alt" id="stories"><div class="pg-wrap"><div class="pg-sec-head"><div><span class="pg-eyebrow">Student Success Stories</span><h2 class="pg-h2">Learners who turned ' +
+            esc(state.cfg.short) +
+            ' into a career</h2></div></div>' +
+            PG.storiesHTML(state.cfg.short) +
+            '</div></section>'
+          );
+        }
+
+        /* ---------- boot ---------- */
+        function bindContent() {
+          var lm = document.getElementById('pg-load');
+          if (lm)
+            lm.addEventListener('click', function () {
+              state.shown += PER;
+              document.getElementById('pg-posts').innerHTML = state.arts
+                .slice(0, state.shown)
+                .map(function (a) {
+                  return renderArticleCard(a);
+                })
+                .join('');
+              if (state.shown >= state.arts.length) document.getElementById('pg-loadmore').innerHTML = '';
+            });
+        }
+        function boot() {
+          var cat = resolveCategory();
+          state.cat = cat;
+          state.cfg = PG.cfgFor(cat.id);
+          state.arts = findArticles(cat);
+
+          document.title = cat.name + ' Blogs: Guides, Tutorials & Tips — WsCube Tech Blog';
           document.getElementById('page-desc').content = cat.description;
-          document.getElementById('bc-cat').textContent = cat.name;
 
-          applyFilters();
-          renderBanner();
-          renderFilterBar();
-          renderArticles();
-          renderPagination();
-          renderSidebar();
-        }
+          renderHero();
+          document.getElementById('cat-content').innerHTML = contentHTML();
+          document.getElementById('cat-side').innerHTML = sideHTML();
+          document.getElementById('cat-sections').innerHTML =
+            PG.courseSliderHTML(
+              state.cfg.course ? 'Online Programs to Level Up Your Career' : 'Explore Our Online Programs',
+              'Live, mentor-led programs with projects and placement support.',
+              cat.id,
+            ) +
+            PG.masterclassHTML() +
+            relatedHTML() +
+            seoHTML() +
+            faqSectionHTML() +
+            storiesSectionHTML();
 
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', boot);
-        } else {
-          boot();
+          bindContent();
+          var cb = document.getElementById('pg-cities-btn');
+          if (cb)
+            cb.addEventListener('click', function () {
+              var p = document.getElementById('pg-cities');
+              var open = p.classList.toggle('open');
+              cb.textContent = open ? 'Show fewer cities' : 'Show all ' + PG.CITIES.length + ' cities';
+              cb.setAttribute('aria-expanded', String(open));
+            });
+          var seo = document.getElementById('pg-seo');
+          document.getElementById('pg-seo-btn').addEventListener('click', function () {
+            var open = seo.classList.toggle('open');
+            this.textContent = open ? 'Read less' : 'Read more';
+            this.setAttribute('aria-expanded', String(open));
+          });
+          PG.initLeadModal();
+          PG.initMasterclass();
+          PG.initCourseSlider();
+          PG.initFloaters();
         }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+        else boot();
       })();
     </script>
   </body>

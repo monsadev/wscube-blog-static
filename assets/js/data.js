@@ -6,7 +6,7 @@ const ARTICLES_DATA = [
     "id": "what-is-digital-marketing",
     "slug": "what-is-digital-marketing",
     "title": "What is Digital Marketing? 2026 Guide for Beginners",
-    "excerpt": "Ever laughed at a Zomato notification or shared a Blinkit meme on Instagram? That's not just humour â€” it's smart digital marketing at work. This beginner-friendly guide covers everything you need to know.",
+    "excerpt": "Ever laughed at a Zomato notification or shared a Blinkit meme on Instagram? That's not just humour — it's smart digital marketing at work. This beginner-friendly guide covers everything you need to know.",
     "category": "digital-marketing",
     "author": "durjey-kayath",
     "publishedDate": "2026-07-15",
@@ -23,7 +23,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "Digital marketing is the process of promoting products, services, or ideas using the internet and digital platforms. Unlike traditional marketing methods such as TV ads or billboards, digital marketing happens where people spend most of their time today â€” on Google, social media, websites, and mobile apps."
+        "text": "Digital marketing is the process of promoting products, services, or ideas using the internet and digital platforms. Unlike traditional marketing methods such as TV ads or billboards, digital marketing happens where people spend most of their time today — on Google, social media, websites, and mobile apps."
       },
       {
         "type": "heading",
@@ -49,7 +49,7 @@ const ARTICLES_DATA = [
         "type": "list",
         "style": "unordered",
         "items": [
-          "A blog ranking on Google when you search 'best headphones under â‚¹2000' (SEO)",
+          "A blog ranking on Google when you search 'best headphones under ₹2000' (SEO)",
           "Sponsored results you see at the top of Google searches (Google Ads)",
           "Fashion brands showcasing their collection through short videos on Instagram (Reels)",
           "YouTubers recommending gadgets with purchase links in the description (Affiliate Marketing)",
@@ -63,7 +63,7 @@ const ARTICLES_DATA = [
       },
       {
         "type": "paragraph",
-        "text": "The importance of digital marketing continues to grow as businesses increasingly rely on digital channels to reach customers, drive growth, and stay competitive. The massive market growth, rise of AI in marketing, and shifting consumer behavior all point to one direction â€” digital marketing is not optional anymore."
+        "text": "The importance of digital marketing continues to grow as businesses increasingly rely on digital channels to reach customers, drive growth, and stay competitive. The massive market growth, rise of AI in marketing, and shifting consumer behavior all point to one direction — digital marketing is not optional anymore."
       },
       {
         "type": "heading",
@@ -126,7 +126,7 @@ const ARTICLES_DATA = [
           {
             "step": 2,
             "title": "Set Clear Goals",
-            "description": "Decide what you want to achieve â€” brand awareness, lead generation, sales, or customer retention."
+            "description": "Decide what you want to achieve — brand awareness, lead generation, sales, or customer retention."
           },
           {
             "step": 3,
@@ -403,7 +403,7 @@ const ARTICLES_DATA = [
     "id": "what-is-seo",
     "slug": "what-is-seo",
     "title": "What is SEO in Digital Marketing? Complete Beginners Guide",
-    "excerpt": "When you search 'summer dresses online' and see Myntra right on top â€” that's SEO at work. This complete guide explains what SEO is, how search engines work, and how to get started.",
+    "excerpt": "When you search 'summer dresses online' and see Myntra right on top — that's SEO at work. This complete guide explains what SEO is, how search engines work, and how to get started.",
     "category": "seo",
     "author": "durjey-kayath",
     "publishedDate": "2026-07-22",
@@ -420,7 +420,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "When you search 'summer dresses online' and see Myntra right on top, or look for 'used cars in India' and find CarDekho among the first results â€” that's no accident. It's the smart use of Search Engine Optimization (SEO)."
+        "text": "When you search 'summer dresses online' and see Myntra right on top, or look for 'used cars in India' and find CarDekho among the first results — that's no accident. It's the smart use of Search Engine Optimization (SEO)."
       },
       {
         "type": "heading",
@@ -429,7 +429,7 @@ const ARTICLES_DATA = [
       },
       {
         "type": "paragraph",
-        "text": "SEO means improving your website so it ranks higher on Google and other search engines when people look for information, products, or services. Simply put, SEO helps your business get found online without paying for ads. Today, SEO goes beyond just Google â€” with the rise of AI-powered search, your content's visibility depends on how well it's optimized for both traditional and AI-driven search results."
+        "text": "SEO means improving your website so it ranks higher on Google and other search engines when people look for information, products, or services. Simply put, SEO helps your business get found online without paying for ads. Today, SEO goes beyond just Google — with the rise of AI-powered search, your content's visibility depends on how well it's optimized for both traditional and AI-driven search results."
       },
       {
         "type": "heading",
@@ -461,11 +461,11 @@ const ARTICLES_DATA = [
         "items": [
           {
             "question": "What is the difference between on-page and off-page SEO?",
-            "answer": "On-page SEO refers to optimizations you make directly on your website â€” like content quality, keyword usage, meta tags, and page structure. Off-page SEO involves activities outside your website that influence rankings, primarily building quality backlinks from other authoritative websites."
+            "answer": "On-page SEO refers to optimizations you make directly on your website — like content quality, keyword usage, meta tags, and page structure. Off-page SEO involves activities outside your website that influence rankings, primarily building quality backlinks from other authoritative websites."
           },
           {
             "question": "Is SEO free?",
-            "answer": "The organic rankings that SEO achieves are free in the sense that you don't pay for clicks. However, effective SEO requires investment in content creation, technical optimization, link building, and often professional expertise â€” all of which have costs."
+            "answer": "The organic rankings that SEO achieves are free in the sense that you don't pay for clicks. However, effective SEO requires investment in content creation, technical optimization, link building, and often professional expertise — all of which have costs."
           }
         ]
       }
@@ -475,7 +475,7 @@ const ARTICLES_DATA = [
     "id": "what-is-ai",
     "slug": "what-is-artificial-intelligence",
     "title": "What Is Artificial Intelligence (AI)? Complete 2026 Guide",
-    "excerpt": "Ten years ago, AI was science fiction. Today it writes your emails, recommends your next show, and drives cars. This complete guide breaks down AI in plain language â€” no jargon, no confusion.",
+    "excerpt": "Ten years ago, AI was science fiction. Today it writes your emails, recommends your next show, and drives cars. This complete guide breaks down AI in plain language — no jargon, no confusion.",
     "category": "artificial-intelligence",
     "author": "mohit-kumar",
     "publishedDate": "2026-06-15",
@@ -493,7 +493,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "Ten years ago, most people thought of AI as something out of a science fiction movie. Today, it writes your emails, recommends your next show, drives cars, and helps doctors spot diseases earlier than ever before. In 2026, AI is not a futuristic idea anymore â€” it is part of daily life."
+        "text": "Ten years ago, most people thought of AI as something out of a science fiction movie. Today, it writes your emails, recommends your next show, drives cars, and helps doctors spot diseases earlier than ever before. In 2026, AI is not a futuristic idea anymore — it is part of daily life."
       },
       {
         "type": "heading",
@@ -502,7 +502,7 @@ const ARTICLES_DATA = [
       },
       {
         "type": "paragraph",
-        "text": "Artificial intelligence is the ability of a computer or machine to perform tasks that normally require human thinking â€” such as learning, reasoning, solving problems, understanding language, and recognizing patterns. AI stands for Artificial Intelligence â€” 'Artificial' means made by humans, and 'Intelligence' refers to the ability to learn, reason, and make decisions."
+        "text": "Artificial intelligence is the ability of a computer or machine to perform tasks that normally require human thinking — such as learning, reasoning, solving problems, understanding language, and recognizing patterns. AI stands for Artificial Intelligence — 'Artificial' means made by humans, and 'Intelligence' refers to the ability to learn, reason, and make decisions."
       },
       {
         "type": "heading",
@@ -575,13 +575,13 @@ const ARTICLES_DATA = [
         "type": "list",
         "style": "ordered",
         "items": [
-          "Narrow AI (Weak AI) â€” Designed for a specific task like image recognition or language translation",
-          "General AI (Strong AI) â€” Hypothetical AI with human-level intelligence across all tasks",
-          "Super AI â€” Beyond human intelligence, currently theoretical",
-          "Machine Learning â€” AI that learns from data without explicit programming",
-          "Deep Learning â€” AI using neural networks with many layers to learn complex patterns",
-          "Natural Language Processing â€” AI that understands and generates human language",
-          "Computer Vision â€” AI that interprets visual information from images and video"
+          "Narrow AI (Weak AI) — Designed for a specific task like image recognition or language translation",
+          "General AI (Strong AI) — Hypothetical AI with human-level intelligence across all tasks",
+          "Super AI — Beyond human intelligence, currently theoretical",
+          "Machine Learning — AI that learns from data without explicit programming",
+          "Deep Learning — AI using neural networks with many layers to learn complex patterns",
+          "Natural Language Processing — AI that understands and generates human language",
+          "Computer Vision — AI that interprets visual information from images and video"
         ]
       },
       {
@@ -629,13 +629,13 @@ const ARTICLES_DATA = [
       },
       {
         "type": "paragraph",
-        "text": "An AI agent is a software system that can perceive its environment, make decisions, and take actions to achieve specific goals â€” often with minimal human intervention. Think of it as an AI that doesn't just answer your questions but actually does things for you."
+        "text": "An AI agent is a software system that can perceive its environment, make decisions, and take actions to achieve specific goals — often with minimal human intervention. Think of it as an AI that doesn't just answer your questions but actually does things for you."
       },
       {
         "type": "highlight",
         "style": "info",
         "title": "AI Agent vs. Regular AI",
-        "text": "Regular AI tools like ChatGPT respond to prompts. AI agents go further â€” they can browse the web, write and run code, manage files, send emails, and complete multi-step tasks entirely on their own."
+        "text": "Regular AI tools like ChatGPT respond to prompts. AI agents go further — they can browse the web, write and run code, manage files, send emails, and complete multi-step tasks entirely on their own."
       },
       {
         "type": "heading",
@@ -648,7 +648,7 @@ const ARTICLES_DATA = [
           {
             "step": 1,
             "title": "Perception",
-            "description": "The agent receives input from its environment â€” text, data, images, or tool outputs."
+            "description": "The agent receives input from its environment — text, data, images, or tool outputs."
           },
           {
             "step": 2,
@@ -658,7 +658,7 @@ const ARTICLES_DATA = [
           {
             "step": 3,
             "title": "Action",
-            "description": "The agent uses tools â€” like web search, code execution, or API calls â€” to take action."
+            "description": "The agent uses tools — like web search, code execution, or API calls — to take action."
           },
           {
             "step": 4,
@@ -687,7 +687,7 @@ const ARTICLES_DATA = [
     "id": "will-ai-replace-digital-marketers",
     "slug": "will-ai-replace-digital-marketers",
     "title": "Will AI Replace Digital Marketers in 2026? The Future Explained",
-    "excerpt": "Artificial intelligence is transforming digital marketing at an unprecedented pace. From content creation and ad optimization to customer support â€” will AI eventually replace digital marketers?",
+    "excerpt": "Artificial intelligence is transforming digital marketing at an unprecedented pace. From content creation and ad optimization to customer support — will AI eventually replace digital marketers?",
     "category": "artificial-intelligence",
     "author": "durjey-kayath",
     "publishedDate": "2026-06-20",
@@ -704,7 +704,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "Artificial intelligence is transforming digital marketing at an unprecedented pace. From content creation and ad optimization to customer support, AI-powered tools are automating tasks that once required human expertise. This raises an important question â€” will AI replace digital marketers?"
+        "text": "Artificial intelligence is transforming digital marketing at an unprecedented pace. From content creation and ad optimization to customer support, AI-powered tools are automating tasks that once required human expertise. This raises an important question — will AI replace digital marketers?"
       },
       {
         "type": "heading",
@@ -780,7 +780,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "Generative AI is an advanced technology that can create new content â€” text, images, audio, videos, and even code â€” using machine learning models trained on vast datasets. From ChatGPT to Midjourney, generative AI tools are reshaping creative industries, software development, and business operations."
+        "text": "Generative AI is an advanced technology that can create new content — text, images, audio, videos, and even code — using machine learning models trained on vast datasets. From ChatGPT to Midjourney, generative AI tools are reshaping creative industries, software development, and business operations."
       },
       {
         "type": "heading",
@@ -813,7 +813,7 @@ const ARTICLES_DATA = [
           {
             "step": 5,
             "title": "Learn LLMs and Transformer Architecture",
-            "description": "Understand how models like GPT work â€” attention mechanisms, tokenization, fine-tuning, and prompt engineering."
+            "description": "Understand how models like GPT work — attention mechanisms, tokenization, fine-tuning, and prompt engineering."
           },
           {
             "step": 6,
@@ -868,7 +868,7 @@ const ARTICLES_DATA = [
       },
       {
         "type": "paragraph",
-        "text": "A full stack developer is a programmer who can work on every layer of a web application â€” from designing user interfaces to building server infrastructure, databases, and APIs. They're the Swiss Army knife of software development."
+        "text": "A full stack developer is a programmer who can work on every layer of a web application — from designing user interfaces to building server infrastructure, databases, and APIs. They're the Swiss Army knife of software development."
       },
       {
         "type": "heading",
@@ -944,7 +944,7 @@ const ARTICLES_DATA = [
         "items": [
           {
             "question": "Is full stack development a good career in 2026?",
-            "answer": "Full stack development remains an excellent career choice in 2026. The demand for versatile developers who can work across the stack continues to grow, especially with the rise of small teams and startups. Average salaries range from â‚¹6-20 LPA in India depending on experience."
+            "answer": "Full stack development remains an excellent career choice in 2026. The demand for versatile developers who can work across the stack continues to grow, especially with the rise of small teams and startups. Average salaries range from ₹6-20 LPA in India depending on experience."
           },
           {
             "question": "How long does it take to become a full stack developer?",
@@ -1017,8 +1017,8 @@ const ARTICLES_DATA = [
           ],
           [
             "Salary (India)",
-            "â‚¹3-15 LPA",
-            "â‚¹4-25 LPA"
+            "₹3-15 LPA",
+            "₹4-25 LPA"
           ]
         ]
       },
@@ -1045,7 +1045,7 @@ const ARTICLES_DATA = [
         "items": [
           {
             "question": "Should I learn web design or web development?",
-            "answer": "It depends on your strengths and interests. If you love visual creativity, color, and user experience â€” web design is a great path. If you enjoy problem-solving, logic, and building things from scratch â€” web development is the right choice. Many professionals learn both to become more well-rounded."
+            "answer": "It depends on your strengths and interests. If you love visual creativity, color, and user experience — web design is a great path. If you enjoy problem-solving, logic, and building things from scratch — web development is the right choice. Many professionals learn both to become more well-rounded."
           }
         ]
       }
@@ -1093,7 +1093,7 @@ const ARTICLES_DATA = [
           },
           {
             "question": "What are the four pillars of OOP in Java?",
-            "answer": "The four pillars are: (1) Encapsulation â€” bundling data and methods together, (2) Inheritance â€” one class inheriting properties from another, (3) Polymorphism â€” one interface with multiple implementations, and (4) Abstraction â€” hiding implementation details and showing only essential features."
+            "answer": "The four pillars are: (1) Encapsulation — bundling data and methods together, (2) Inheritance — one class inheriting properties from another, (3) Polymorphism — one interface with multiple implementations, and (4) Abstraction — hiding implementation details and showing only essential features."
           },
           {
             "question": "What is the difference between == and .equals() in Java?",
@@ -1167,7 +1167,7 @@ const ARTICLES_DATA = [
           },
           {
             "question": "What are Python decorators?",
-            "answer": "Decorators are functions that take another function as an argument, add some behavior, and return a new function. They're used for adding functionality to existing code without modifying it â€” common uses include logging, authentication checking, caching, and timing."
+            "answer": "Decorators are functions that take another function as an argument, add some behavior, and return a new function. They're used for adding functionality to existing code without modifying it — common uses include logging, authentication checking, caching, and timing."
           }
         ]
       }
@@ -1252,7 +1252,7 @@ const ARTICLES_DATA = [
       },
       {
         "type": "paragraph",
-        "text": "A high-income skill is one where demand from employers significantly outstrips supply of skilled professionals, where it creates measurable, quantifiable business value, and where it takes meaningful time and effort to develop â€” creating a natural barrier to entry."
+        "text": "A high-income skill is one where demand from employers significantly outstrips supply of skilled professionals, where it creates measurable, quantifiable business value, and where it takes meaningful time and effort to develop — creating a natural barrier to entry."
       },
       {
         "type": "heading",
@@ -1269,87 +1269,87 @@ const ARTICLES_DATA = [
         "rows": [
           [
             "AI/Machine Learning",
-            "â‚¹12-35 LPA",
+            "₹12-35 LPA",
             "High"
           ],
           [
             "Full Stack Development",
-            "â‚¹8-25 LPA",
+            "₹8-25 LPA",
             "High"
           ],
           [
             "Data Science",
-            "â‚¹8-30 LPA",
+            "₹8-30 LPA",
             "High"
           ],
           [
             "Cloud Computing (AWS/Azure)",
-            "â‚¹10-30 LPA",
+            "₹10-30 LPA",
             "Medium-High"
           ],
           [
             "Cybersecurity",
-            "â‚¹8-25 LPA",
+            "₹8-25 LPA",
             "High"
           ],
           [
             "DevOps Engineering",
-            "â‚¹10-28 LPA",
+            "₹10-28 LPA",
             "Medium-High"
           ],
           [
             "Digital Marketing",
-            "â‚¹4-15 LPA",
+            "₹4-15 LPA",
             "Medium"
           ],
           [
             "SEO Specialist",
-            "â‚¹4-18 LPA",
+            "₹4-18 LPA",
             "Medium"
           ],
           [
             "UI/UX Design",
-            "â‚¹5-20 LPA",
+            "₹5-20 LPA",
             "Medium"
           ],
           [
             "Blockchain Development",
-            "â‚¹12-30 LPA",
+            "₹12-30 LPA",
             "High"
           ],
           [
             "Video Editing & Production",
-            "â‚¹4-15 LPA",
+            "₹4-15 LPA",
             "Medium"
           ],
           [
             "Content Writing & Copywriting",
-            "â‚¹3-12 LPA",
+            "₹3-12 LPA",
             "Low-Medium"
           ],
           [
             "Sales & Business Development",
-            "â‚¹5-20 LPA",
+            "₹5-20 LPA",
             "Medium"
           ],
           [
             "Product Management",
-            "â‚¹15-40 LPA",
+            "₹15-40 LPA",
             "High"
           ],
           [
             "Financial Modeling",
-            "â‚¹6-25 LPA",
+            "₹6-25 LPA",
             "Medium-High"
           ],
           [
             "Prompt Engineering",
-            "â‚¹6-20 LPA",
+            "₹6-20 LPA",
             "Low-Medium"
           ],
           [
             "Mobile App Development",
-            "â‚¹6-22 LPA",
+            "₹6-22 LPA",
             "High"
           ]
         ]
@@ -1373,7 +1373,7 @@ const ARTICLES_DATA = [
     "id": "earn-money-online-student",
     "slug": "earn-money-online-as-student",
     "title": "How to Earn Money Online as a Student? 40 Smart Ways (2026)",
-    "excerpt": "Wondering how to earn money as a student in 2026? The good news is that students today have more earning opportunities than ever before. From freelancing to content creation â€” here are 40 smart ways.",
+    "excerpt": "Wondering how to earn money as a student in 2026? The good news is that students today have more earning opportunities than ever before. From freelancing to content creation — here are 40 smart ways.",
     "category": "career-guidance",
     "author": "durjey-kayath",
     "publishedDate": "2026-06-09",
@@ -1391,7 +1391,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "Wondering how to earn money as a student in 2026? The good news is that students today have more earning opportunities than ever before â€” thanks to the internet, gig economy, and rapidly growing digital skills market."
+        "text": "Wondering how to earn money as a student in 2026? The good news is that students today have more earning opportunities than ever before — thanks to the internet, gig economy, and rapidly growing digital skills market."
       },
       {
         "type": "heading",
@@ -1423,14 +1423,14 @@ const ARTICLES_DATA = [
         "type": "highlight",
         "style": "success",
         "title": "Best Skill for Students",
-        "text": "Content writing, social media management, and basic web development are the fastest ways for students to start earning online â€” they require relatively low investment and can be started immediately with existing devices."
+        "text": "Content writing, social media management, and basic web development are the fastest ways for students to start earning online — they require relatively low investment and can be started immediately with existing devices."
       },
       {
         "type": "faq",
         "items": [
           {
             "question": "How much can a student realistically earn online per month?",
-            "answer": "Beginners can realistically earn â‚¹5,000-15,000 per month within the first 3-6 months. With skill development and consistent effort, students can scale to â‚¹20,000-50,000 per month within a year. Top freelancers and content creators earn much more."
+            "answer": "Beginners can realistically earn ₹5,000-15,000 per month within the first 3-6 months. With skill development and consistent effort, students can scale to ₹20,000-50,000 per month within a year. Top freelancers and content creators earn much more."
           }
         ]
       }
@@ -1533,11 +1533,11 @@ const ARTICLES_DATA = [
         "type": "list",
         "style": "unordered",
         "items": [
-          "Front-End Developer â€” Builds user interfaces using HTML, CSS, and JavaScript",
-          "Back-End Developer â€” Builds server-side logic, APIs, and databases",
-          "Full-Stack Developer â€” Works on both front-end and back-end",
-          "Mobile Web Developer â€” Specializes in responsive and mobile-first development",
-          "DevOps/Infrastructure â€” Manages deployment, servers, and CI/CD pipelines"
+          "Front-End Developer — Builds user interfaces using HTML, CSS, and JavaScript",
+          "Back-End Developer — Builds server-side logic, APIs, and databases",
+          "Full-Stack Developer — Works on both front-end and back-end",
+          "Mobile Web Developer — Specializes in responsive and mobile-first development",
+          "DevOps/Infrastructure — Manages deployment, servers, and CI/CD pipelines"
         ]
       },
       {
@@ -1566,7 +1566,7 @@ const ARTICLES_DATA = [
         "items": [
           {
             "question": "What is the average salary of a web developer in India?",
-            "answer": "Entry-level web developers in India earn â‚¹2.5-5 LPA. Mid-level developers with 2-5 years of experience earn â‚¹6-15 LPA. Senior developers and architects with specialized skills can earn â‚¹18-30+ LPA. Location, tech stack, and company size significantly impact compensation."
+            "answer": "Entry-level web developers in India earn ₹2.5-5 LPA. Mid-level developers with 2-5 years of experience earn ₹6-15 LPA. Senior developers and architects with specialized skills can earn ₹18-30+ LPA. Location, tech stack, and company size significantly impact compensation."
           }
         ]
       }
@@ -1603,13 +1603,13 @@ const ARTICLES_DATA = [
       },
       {
         "type": "paragraph",
-        "text": "Yes â€” and increasingly so. Startups prefer full-stack developers because one person can handle what would otherwise require multiple specialists. Established companies value them for the ability to quickly prototype, debug across layers, and reduce coordination overhead."
+        "text": "Yes — and increasingly so. Startups prefer full-stack developers because one person can handle what would otherwise require multiple specialists. Established companies value them for the ability to quickly prototype, debug across layers, and reduce coordination overhead."
       },
       {
         "type": "highlight",
         "style": "success",
         "title": "Job Market Data",
-        "text": "Full-stack developer roles grew by 28% in India's job market in 2025-26, with average salaries increasing from â‚¹7.2 LPA to â‚¹9.8 LPA. Remote opportunities have also expanded significantly."
+        "text": "Full-stack developer roles grew by 28% in India's job market in 2025-26, with average salaries increasing from ₹7.2 LPA to ₹9.8 LPA. Remote opportunities have also expanded significantly."
       },
       {
         "type": "faq",
@@ -1626,7 +1626,7 @@ const ARTICLES_DATA = [
     "id": "ai-in-digital-marketing",
     "slug": "impact-of-ai-in-digital-marketing",
     "title": "Impact of AI in Digital Marketing: Complete 2026 Guide",
-    "excerpt": "Artificial intelligence is transforming digital marketing faster than ever. From personalized email campaigns and smart ad optimization to AI-powered chatbots â€” here's how AI is reshaping the industry.",
+    "excerpt": "Artificial intelligence is transforming digital marketing faster than ever. From personalized email campaigns and smart ad optimization to AI-powered chatbots — here's how AI is reshaping the industry.",
     "category": "digital-marketing",
     "author": "durjey-kayath",
     "publishedDate": "2026-06-18",
@@ -1695,7 +1695,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "Keyword research is the foundation of any successful SEO strategy. It's the process of discovering the exact words and phrases your target audience types into search engines â€” and then creating content that meets those needs."
+        "text": "Keyword research is the foundation of any successful SEO strategy. It's the process of discovering the exact words and phrases your target audience types into search engines — and then creating content that meets those needs."
       },
       {
         "type": "heading",
@@ -1831,7 +1831,7 @@ const ARTICLES_DATA = [
     "content": [
       {
         "type": "paragraph",
-        "text": "Content marketing is a strategic marketing approach focused on creating and distributing valuable, relevant, and consistent content to attract and retain a clearly defined audience â€” and ultimately, to drive profitable customer action."
+        "text": "Content marketing is a strategic marketing approach focused on creating and distributing valuable, relevant, and consistent content to attract and retain a clearly defined audience — and ultimately, to drive profitable customer action."
       },
       {
         "type": "heading",
@@ -1997,12 +1997,12 @@ const ARTICLES_DATA = [
         "type": "list",
         "style": "unordered",
         "items": [
-          "Security Analyst â€” Monitor systems for threats and vulnerabilities",
-          "Penetration Tester (Ethical Hacker) â€” Simulate attacks to find weaknesses",
-          "Security Engineer â€” Design and implement security systems",
-          "Cloud Security Architect â€” Secure cloud infrastructure",
-          "Incident Response Analyst â€” Handle and recover from security breaches",
-          "CISO (Chief Information Security Officer) â€” Senior leadership role"
+          "Security Analyst — Monitor systems for threats and vulnerabilities",
+          "Penetration Tester (Ethical Hacker) — Simulate attacks to find weaknesses",
+          "Security Engineer — Design and implement security systems",
+          "Cloud Security Architect — Secure cloud infrastructure",
+          "Incident Response Analyst — Handle and recover from security breaches",
+          "CISO (Chief Information Security Officer) — Senior leadership role"
         ]
       },
       {
@@ -2075,8 +2075,8 @@ const ARTICLES_DATA = [
           ],
           [
             "Avg. Salary (India)",
-            "â‚¹8-25 LPA",
-            "â‚¹12-35 LPA"
+            "₹8-25 LPA",
+            "₹12-35 LPA"
           ]
         ]
       },
