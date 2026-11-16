@@ -120,24 +120,7 @@
             ' Explore in-depth guides, step-by-step tutorials and expert tips from the WsCube Tech team, and keep learning at your own pace with free, regularly updated content.</p>' +
             '<div class="pg-hero-actions">' +
             actions +
-            '</div></div>' +
-            '<div class="pg-hero-card"><div class="pg-hero-card-top"><span class="pg-cat-ico" style="background:' +
-            c.bgColor +
-            ';color:' +
-            c.color +
-            '">' +
-            icon +
-            '</span>' +
-            '<div><b>' +
-            esc(c.name) +
-            '</b><span>Free expert-written guides</span></div></div>' +
-            '<div class="pg-hero-stats"><div><b>' +
-            state.arts.length +
-            '</b><span>Articles</span></div><div><b>' +
-            (avg || '—') +
-            (avg ? 'm' : '') +
-            '</b><span>Avg. read</span></div><div><b>100%</b><span>Free</span></div></div></div>' +
-            '</div></div>';
+            '</div></div></div></div>';
         }
 
         /* ---------- inline CTA ---------- */
@@ -429,12 +412,12 @@
           if (cfg.cities) {
             var pin = PG.svg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>', 20);
             var tiles = PG.CITIES.map(function (ct, i) {
-              return '<a class="pg-city' + (i >= 8 ? ' is-extra' : '') + '" href="#" data-open-lead="Get Free Career Counselling"><span class="pg-city-ico">' + pin + '</span><span class="pg-city-t"><b>' + ct + '</b><small>' + esc(cfg.short) + ' Course</small></span><em aria-hidden="true">→</em></a>';
+              return '<a class="pg-city' + '' + '" href="#" data-open-lead="Get Free Career Counselling"><span class="pg-city-ico">' + pin + '</span><span class="pg-city-t"><b>' + ct + '</b><small>' + esc(cfg.short) + ' Course</small></span><em aria-hidden="true">→</em></a>';
             }).join('');
             out +=
               '<div class="pg-cities-panel" id="pg-cities"><div class="pg-cities-head"><div><span class="pg-eyebrow">Near You</span><h2 class="pg-h2">' + esc(state.cat.name) + ' Courses by City</h2>' +
               '<p class="pg-sub">Find ' + esc(cfg.short) + ' training programs in your city.</p></div>' +
-              '<button class="pgb pgb--ghost pgb--sm" type="button" id="pg-cities-btn" aria-expanded="false">Show all ' + PG.CITIES.length + ' cities</button></div>' +
+              '</div>' +
               '<div class="pg-cities">' + tiles + '</div></div>';
           }          return out + '</div></section>';
         }
@@ -541,14 +524,6 @@
             storiesSectionHTML();
 
           bindContent();
-          var cb = document.getElementById('pg-cities-btn');
-          if (cb)
-            cb.addEventListener('click', function () {
-              var p = document.getElementById('pg-cities');
-              var open = p.classList.toggle('open');
-              cb.textContent = open ? 'Show fewer cities' : 'Show all ' + PG.CITIES.length + ' cities';
-              cb.setAttribute('aria-expanded', String(open));
-            });
           var seo = document.getElementById('pg-seo');
           document.getElementById('pg-seo-btn').addEventListener('click', function () {
             var open = seo.classList.toggle('open');
