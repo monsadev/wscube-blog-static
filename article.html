@@ -146,13 +146,7 @@
             '<p class="pg-intro">' +
             esc(a.excerpt) +
             '</p>' +
-            '<div class="pg-art-meta"><div><img src="' +
-            esc(auth.avatar) +
-            '" alt="' +
-            esc(auth.name) +
-            '" onerror="this.style.display=\'none\'" /><span>By <b>' +
-            esc(auth.name) +
-            '</b></span></div>' +
+            '<div class="pg-art-meta">' +
             '<span>' +
             icon +
             ' Last updated: <b>' +
@@ -183,9 +177,7 @@
             ' Download Placement Report</button></div></div>' +
             course +
             google +
-            '<a class="pgb pgb--ghost" href="#related" id="pg-rel-btn">Related blogs ' +
-            PG.svg('<polyline points="6 9 12 15 18 9"/>', 15) +
-            '</a></div>' +
+            '</div>' +
             '<div class="pg-art-foot">' +
             PG.shareHTML(a.title) +
             '</div></div>'
@@ -258,7 +250,6 @@
             tk = false;
           body.forEach(function (b, i) {
             if (i === courseAt) out += courseCard(cfg, cat);
-            if (i === formAt) out += downloadForm();
             out += renderBlock(b);
             if (!tk && b.type === 'paragraph') {
               out += takeaways(body);
@@ -266,7 +257,6 @@
             }
           });
           if (courseAt === -2) out += courseCard(cfg, cat);
-          if (formAt === -2) out += downloadForm();
           return out;
         }
 
@@ -277,31 +267,30 @@
             all.filter(function (x) {
               return x.id !== auth.id;
             })[0] || auth;
-          function card(label, p, role) {
+          function card(label, p, role, cls) {
             return (
-              '<div class="pg-author"><img src="' +
+              '<div class="pg-author ' + cls + '"><img src="' +
               esc(p.avatar) +
               '" alt="' +
               esc(p.name) +
-              '" loading="lazy" onerror="this.src=\'assets/images/authors/default.svg\'" /><div><small>' +
+              '" loading="lazy" onerror="this.src=\'assets/images/authors/default.svg\'" /><div class="pg-author-t"><small>' +
               label +
               '</small><b>' +
               esc(p.name) +
               '</b><div class="role">' +
               esc(role) +
-              '</div><p>' +
-              esc(p.bio) +
-              '</p></div></div>'
+              '</div>' +
+              (cls === 'is-main' ? '<p>' + esc(p.bio) + '</p>' : '') +
+              '</div></div>'
             );
           }
           return (
             '<div class="pg-authors">' +
-            card('Written by', auth, auth.role) +
-            card('Reviewed by', rev, 'Reviewer · ' + rev.role) +
+            card('Written by', auth, auth.role, 'is-main') +
+            card('Reviewed by', rev, rev.role, 'is-rev') +
             '</div>'
           );
         }
-
         /* ---------- comments ---------- */
         function commentsKey(id) {
           return 'wsc_comments_' + id;
@@ -406,7 +395,7 @@
           return (
             b1 +
             b2 +
-            '<div class="sw"><h3 class="sw-title">Categories</h3><div class="cat-list">' +
+            '<div class="sw"><h3 class="sw-title">Related Categories</h3><div class="cat-list">' +
             cats +
             '</div></div><div class="sw"><h3 class="sw-title">Popular Articles</h3><div class="pop-list">' +
             pop +

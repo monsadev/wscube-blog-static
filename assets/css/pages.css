@@ -2454,3 +2454,115 @@ body.has-fixbar .pg-top {
   cursor: pointer;
 }
 .pg-seo-btn:hover { background: none !important; color: #0f36c9; }
+
+/* author section: one unified card */
+.pg-authors {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 26px;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.04);
+}
+.pg-authors .pg-author {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  padding: 0;
+  align-items: flex-start;
+}
+.pg-authors .pg-author img {
+  width: 64px;
+  height: 64px;
+}
+.pg-authors .pg-author p {
+  -webkit-line-clamp: 3;
+  font-size: 0.875rem;
+}
+.pg-authors .pg-author.is-rev {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  align-items: center;
+}
+.pg-authors .pg-author.is-rev img {
+  width: 44px;
+  height: 44px;
+}
+.pg-authors .pg-author.is-rev .pg-author-t {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+.pg-authors .pg-author.is-rev small { flex-basis: 100%; }
+.pg-authors .pg-author.is-rev b { margin: 0; }
+
+/* wider layout: bigger container, tighter gaps, slimmer sidebars */
+.pg-wrap { max-width: 1240px; }
+@media (min-width: 1280px) {
+  .pg-art-layout {
+    grid-template-columns: 210px minmax(0, 1fr) 285px;
+    gap: 20px;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .pg-art-layout {
+    grid-template-columns: minmax(0, 1fr) 285px;
+    gap: 20px;
+  }
+}
+.pg-art-card { padding: 24px 20px 28px; }
+@media (max-width: 760px) { .pg-art-card { padding: 20px 18px 24px; } }
+@media (min-width: 1025px) {
+  .pg-layout {
+    grid-template-columns: minmax(0, 1fr) 285px;
+    gap: 20px;
+  }
+}
+
+/* related categories: same cards as index "Explore by Category" */
+.pg-rel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 760px) { .pg-rel { grid-template-columns: 1fr; } }
+.pg-rel a.xc-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 0;
+  background: none;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+  transform: none;
+  font-size: inherit;
+  font-weight: inherit;
+}
+.pg-rel a.xc-row:hover { transform: none; box-shadow: none; }
+.pg-rel a.xc-all {
+  display: inline-flex;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cat-color, var(--blue)) 10%, #fff);
+  color: var(--cat-color, var(--blue));
+  font-size: var(--t-sm, 0.875rem);
+  font-weight: 700;
+  box-shadow: none;
+}
+.pg-rel a.xc-all:hover {
+  transform: none;
+  box-shadow: none;
+  background: var(--cat-color, var(--blue));
+  color: #fff;
+}
+
+/* cities: same card as index "Explore detailed course syllabus" */
+.pg-cities-card { margin-top: 36px; }
+a.syl-item { text-decoration: none; color: inherit; }

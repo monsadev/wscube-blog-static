@@ -374,7 +374,7 @@
             '</h3><div class="pop-list">' +
             popular +
             '</div></div>' +
-            '<div class="sw"><h3 class="sw-title">All Categories</h3><div class="cat-list">' +
+            '<div class="sw"><h3 class="sw-title">Related Categories</h3><div class="cat-list">' +
             cats +
             '</div></div>'
           );
@@ -383,25 +383,42 @@
         /* ---------- full-width sections ---------- */
         function relatedHTML() {
           var cfg = state.cfg;
+          var pool = state.arts.length ? state.arts : getArticles();
+          function fdate(d) {
+            try {
+              return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            } catch (e) {
+              return '';
+            }
+          }
+          function row(a) {
+            return (
+              '<a href="article.html?id=' + esc(a.id) + '" class="xc-row" aria-label="' + esc(a.title) + '">' +
+              '<span class="xc-thumb"><img src="' + esc(a.image) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" /></span>' +
+              '<span class="xc-info"><span class="xc-title">' + esc(a.title) + '</span>' +
+              '<span class="xc-meta">' + fdate(a.publishedDate) + ' · ' + (a.readingTime || 5) + ' min read</span></span></a>'
+            );
+          }
           var items = cfg.related
-            .map(function (id) {
+            .map(function (id, idx) {
               var real = getCategoryById(id);
               var name = real ? real.name : PG.RELATED_NAMES[id] || titleCase(id);
-              var color = '#194cff',
-                bg = '#e8edff';
+              var PAL = [['#194cff', '#e8edff'], ['#fc9c03', '#fff5e6'], ['#22bb33', '#dbf5f0'], ['#2d0095', '#e3e0f3'], ['#f65555', '#ffedea'], ['#4b5563', '#f3f4f6']];
+              var color = real ? real.color : PAL[idx % PAL.length][0],
+                bg = real ? real.bgColor : PAL[idx % PAL.length][1];
+              var list = real ? getArticlesByCategory(id) : [];
+              if (!list.length) {
+                list = [];
+                for (var k = 0; k < Math.min(3, pool.length); k++) list.push(pool[(idx + k) % pool.length]);
+              }
               var icon = ICONS[id] || ICONS['grid'];
               return (
-                '<a href="category.html?id=' +
-                esc(id) +
-                '"><span class="pg-rel-ico" style="--c:' +
-                color +
-                ';--bg:' +
-                bg +
-                '">' +
-                icon +
-                '</span>' +
-                esc(name) +
-                '<em>→</em></a>'
+                '<div class="xc" style="--cat-color:' + color + ';--cat-bg:' + bg + ';" aria-label="' + esc(name) + ' articles">' +
+                '<div class="xc-head"><span class="xc-badge">' + icon + '</span>' +
+                '<div class="xc-name"><h3>' + esc(name) + '</h3><span>' + (real ? getArticlesByCategory(id).length + ' articles' : 'Related guides') + '</span></div>' +
+                '<a href="category.html?id=' + esc(id) + '" class="xc-all" aria-label="View all ' + esc(name) + ' articles">View All ' +
+                '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a></div>' +
+                '<div class="xc-list">' + list.slice(0, 3).map(row).join('') + '</div></div>'
               );
             })
             .join('');
@@ -410,16 +427,13 @@
             items +
             '</div>';
           if (cfg.cities) {
-            var pin = PG.svg('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>', 20);
-            var tiles = PG.CITIES.map(function (ct, i) {
-              return '<a class="pg-city' + '' + '" href="#" data-open-lead="Get Free Career Counselling"><span class="pg-city-ico">' + pin + '</span><span class="pg-city-t"><b>' + ct + '</b><small>' + esc(cfg.short) + ' Course</small></span><em aria-hidden="true">→</em></a>';
+            var chev = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+            var tiles = PG.CITIES.map(function (ct) {
+              return '<a class="syl-item" href="#" data-open-lead="Get Free Career Counselling"><span class="syl-text">' + esc(cfg.short) + ' Course in ' + esc(ct) + ': Fees, Curriculum &amp; Placements</span><span class="syl-chev" aria-hidden="true">' + chev + '</span></a>';
             }).join('');
             out +=
-              '<div class="pg-cities-panel" id="pg-cities"><div class="pg-cities-head"><div><span class="pg-eyebrow">Near You</span><h2 class="pg-h2">' + esc(state.cat.name) + ' Courses by City</h2>' +
-              '<p class="pg-sub">Find ' + esc(cfg.short) + ' training programs in your city.</p></div>' +
-              '</div>' +
-              '<div class="pg-cities">' + tiles + '</div></div>';
-          }          return out + '</div></section>';
+              '<div class="syl-card pg-cities-card"><span class="syl-pill">Near You</span><h2 class="syl-title">' + esc(state.cat.name) + ' Courses by City</h2>' +
+              '<div class="syl-grid">' + tiles + '</div></div>';          }          return out + '</div></section>';
         }
         function seoHTML() {
           var c = state.cat,
@@ -512,16 +526,10 @@
           document.getElementById('cat-content').innerHTML = contentHTML();
           document.getElementById('cat-side').innerHTML = sideHTML();
           document.getElementById('cat-sections').innerHTML =
-            PG.courseSliderHTML(
-              state.cfg.course ? 'Online Programs to Level Up Your Career' : 'Explore Our Online Programs',
-              'Live, mentor-led programs with projects and placement support.',
-              cat.id,
-            ) +
             PG.masterclassHTML() +
             relatedHTML() +
             seoHTML() +
-            faqSectionHTML() +
-            storiesSectionHTML();
+            faqSectionHTML();
 
           bindContent();
           var seo = document.getElementById('pg-seo');
@@ -532,7 +540,6 @@
           });
           PG.initLeadModal();
           PG.initMasterclass();
-          PG.initCourseSlider();
           PG.initFloaters();
         }
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
