@@ -2566,3 +2566,115 @@ body.has-fixbar .pg-top {
 /* cities: same card as index "Explore detailed course syllabus" */
 .pg-cities-card { margin-top: 36px; }
 a.syl-item { text-decoration: none; color: inherit; }
+
+/* article-0: TOC inside the article card, below the featured image, not sticky */
+.pg-art0 { grid-template-columns: minmax(0, 1fr) 285px !important; gap: 20px; }
+@media (max-width: 1024px) { .pg-art0 { grid-template-columns: minmax(0, 1fr) !important; } }
+.pg-art0 .pg-toc {
+  position: static;
+  margin: 0 0 26px;
+  padding: 20px 22px 14px;
+  background: linear-gradient(180deg, #f3f6ff 0%, #fff 100%);
+  border: 1px solid #dbe4ff;
+  border-radius: 18px;
+}
+.pg-art0 .pg-toc-hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 0 14px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #e3e9f7;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.pg-art0 .pg-toc-ico {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--blue);
+  color: #fff;
+}
+.pg-art0 .pg-toc nav {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 28px;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  counter-reset: toc;
+}
+.pg-art0 .pg-toc nav a {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 9px 0;
+  border: 0;
+  border-bottom: 1px dashed #e3e9f7;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #374151;
+  counter-increment: toc;
+}
+.pg-art0 .pg-toc nav a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--blue);
+  flex-shrink: 0;
+}
+.pg-art0 .pg-toc nav a.h3 { padding-left: 0; font-weight: 500; }
+.pg-art0 .pg-toc nav a:hover,
+.pg-art0 .pg-toc nav a.active { color: var(--blue); background: none; }
+@media (max-width: 640px) { .pg-art0 .pg-toc nav { grid-template-columns: 1fr; } }
+
+.pg-art0 .pg-toc-hd { justify-content: flex-start !important; text-align: left; }
+.pg-art0 .pg-toc-hd span:last-child { font-size: 1.05rem; }
+
+/* hero: author chips in the meta row */
+.pg-art-meta .pg-hp {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 18px;
+  margin-right: 4px;
+  border-right: 1px solid #d5def5;
+}
+.pg-art-meta .pg-hp img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--blue-pale);
+  flex-shrink: 0;
+}
+.pg-art-meta .pg-hp small {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue);
+  line-height: 1.2;
+}
+.pg-art-meta .pg-hp > div > span {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pg-art-meta .pg-hp b { font-size: 0.95rem; color: var(--ink); }
+.pg-art-meta .pg-hp em { font-style: normal; font-size: 0.8125rem; color: #6b7280; }
+@media (max-width: 640px) {
+  .pg-art-meta .pg-hp { border-right: 0; padding-right: 0; width: 100%; }
+}
+
+/* article-1: TOC at top of right sidebar (same look as article.html), not sticky */
+.pg-art1 { grid-template-columns: minmax(0, 1fr) 285px !important; gap: 20px; }
+@media (max-width: 1024px) { .pg-art1 { grid-template-columns: minmax(0, 1fr) !important; } }
