@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="../" />
+    <title>Anjali Verma, Senior Content Writer — WsCube Tech Blog</title>
+    <meta
+      name="description"
+      content="Anjali Verma is a Senior Content Writer at WsCube Tech with 3+ years of experience creating SEO-focused content for the digital marketing industry."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="assets/css/blog.css" />
+    <link rel="stylesheet" href="assets/css/pages.css" />
+  </head>
+  <body>
+    <!-- HERO (centered profile) -->
+    <header class="pg-hero pg-hc-hero" id="au-hero"></header>
+
+    <!-- LATEST BLOGS -->
+    <section class="pg-sec" id="au-blogs">
+      <div class="pg-wrap">
+        <div class="pg-sec-head">
+          <div>
+            <span class="pg-eyebrow">From the author</span>
+            <h2 class="pg-h2">Latest Blogs</h2>
+          </div>
+          <span class="pg-hc-count" id="au-count"></span>
+        </div>
+        <div class="pg-hc-grid" id="au-posts"></div>
+        <div class="pg-loadmore" id="au-more"></div>
+      </div>
+    </section>
+
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/render.js"></script>
+    <script src="assets/js/search.js"></script>
+    <script src="assets/js/shared.js"></script>
+    <script>
+      (function () {
+        'use strict';
+        var PER = 8;
+        var esc = escapeHtml;
+
+        var AUTHOR = {
+          id: 'anjali-verma',
+          name: 'Anjali Verma',
+          role: 'Senior Content Writer',
+          avatar: 'assets/images/authors/anjali-verma.svg',
+          linkedin: 'https://www.linkedin.com/in/anjali-verma/',
+          bio:
+            'Anjali Verma is a Senior Content Writer at WsCube Tech with 3+ years of experience creating SEO-focused content for the digital marketing industry. She researches, writes, and updates educational content on SEO, Content Marketing, Social Media Marketing, PPC, Marketing Analytics, AI in Digital Marketing, Web Development, and other emerging digital marketing topics. Her work is guided by in-depth research, industry best practices, and search intent analysis to ensure every piece of content is accurate, relevant, and valuable to readers.',
+        };
+
+        var TOPIC_CATS = ['seo', 'digital-marketing', 'artificial-intelligence', 'web-development'];
+        var all = getArticles()
+          .filter(function (a) {
+            return TOPIC_CATS.indexOf(a.category) > -1;
+          })
+          .sort(function (x, y) {
+            return new Date(y.publishedDate) - new Date(x.publishedDate);
+          });
+        var shown = PER;
+
+        function heroHTML() {
+          var li = PG.svg(
+            '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+            18,
+          );
+          return (
+            '<div class="pg-wrap"><nav class="pg-bc" aria-label="Breadcrumb"><a href="index.html">Home</a><span aria-hidden="true">›</span><a href="index.html#categories">Blog</a><span aria-hidden="true">›</span><span class="pg-bc-cur">' +
+            esc(AUTHOR.name) +
+            '</span></nav>' +
+            '<div class="pg-hc-prof">' +
+            '<span class="pg-pill"><i></i>Author Profile</span>' +
+            '<div class="pg-hc-photo"><img src="' + esc(AUTHOR.avatar) + '" alt="' + esc(AUTHOR.name) + '" onerror="this.src=\'assets/images/authors/default.svg\'" /></div>' +
+            '<h1 class="pg-title">' + esc(AUTHOR.name) + '</h1>' +
+            '<p class="pg-hc-role">' + esc(AUTHOR.role) + ' · WsCube Tech</p>' +
+            '<p class="pg-hc-bio">' + esc(AUTHOR.bio) + '</p>' +
+            '<a class="pgb pgb--primary" href="' + esc(AUTHOR.linkedin) + '" target="_blank" rel="noopener noreferrer">' + li + ' Connect on LinkedIn</a>' +
+            '</div></div>'
+          );
+        }
+
+        function fdate(d) {
+          try {
+            return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          } catch (e) {
+            return '';
+          }
+        }
+        var cal = PG.svg(
+          '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+          14,
+        );
+        function cardHTML(a) {
+          var cat = getCategoryForArticle(a);
+          var url = 'article.html?id=' + esc(a.id);
+          return (
+            '<article class="pg-hc-card">' +
+            '<div class="pg-hc-body">' +
+            (cat
+              ? '<span class="pg-hc-cat" style="color:' + cat.color + ';background:' + cat.bgColor + '">' + esc(cat.name) + '</span>'
+              : '') +
+            '<h3><a href="' + url + '">' + esc(a.title) + '</a></h3>' +
+            '<p>' + esc(a.excerpt) + '</p>' +
+            '<div class="pg-hc-meta">' + cal + '<span>' + fdate(a.publishedDate) + '</span><i></i><span>' + (a.readingTime || 5) + ' min read</span></div>' +
+            '</div>' +
+            '<a class="pg-hc-thumb" href="' + url + '" tabindex="-1" aria-hidden="true"><img src="' + esc(a.image) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'" /></a>' +
+            '</article>'
+          );
+        }
+
+        function renderPosts() {
+          document.getElementById('au-posts').innerHTML = all.slice(0, shown).map(cardHTML).join('');
+          document.getElementById('au-more').innerHTML =
+            shown < all.length ? '<button class="pgb pgb--ghost" type="button" id="au-load">Load more blogs</button>' : '';
+          var b = document.getElementById('au-load');
+          if (b)
+            b.addEventListener('click', function () {
+              shown += PER;
+              renderPosts();
+            });
+        }
+
+        function boot() {
+          document.getElementById('au-hero').innerHTML = heroHTML();
+          document.getElementById('au-count').textContent = all.length + ' articles';
+          renderPosts();
+          PG.initLeadModal();
+          PG.initFloaters();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+        else boot();
+      })();
+    </script>
+  </body>
+</html>
