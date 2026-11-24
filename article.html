@@ -24,7 +24,7 @@
     <header class="pg-hero pg-art-hero" id="art-hero"></header>
 
     <div class="pg-wrap">
-      <div class="pg-art-layout" id="art-layout"></div>
+      <div class="pg-art-layout pg-art0" id="art-layout"></div>
     </div>
 
     <section class="pg-sec pg-sec--alt" id="related" style="display: none">
@@ -87,7 +87,12 @@
         function tocHTML(items) {
           if (!items.length) return '';
           return (
-            '<div class="pg-toc" id="pg-toc"><div class="pg-toc-hd"><span>Table of Contents</span><button type="button" id="pg-toc-btn" aria-expanded="false">Show</button></div><nav aria-label="Table of contents">' +
+            '<div class="pg-toc open" id="pg-toc"><div class="pg-toc-hd"><span class="pg-toc-ico" aria-hidden="true">' +
+            PG.svg(
+              '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+              18,
+            ) +
+            '</span><span>Table of Contents</span></div><nav aria-label="Table of contents">' +
             items
               .map(function (t) {
                 return (
@@ -177,9 +182,6 @@
             ' Download Placement Report</button></div></div>' +
             course +
             google +
-            '</div>' +
-            '<div class="pg-art-foot">' +
-            PG.shareHTML(a.title) +
             '</div></div>'
           );
         }
@@ -269,7 +271,9 @@
             })[0] || auth;
           function card(label, p, role, cls) {
             return (
-              '<div class="pg-author ' + cls + '"><img src="' +
+              '<div class="pg-author ' +
+              cls +
+              '"><img src="' +
               esc(p.avatar) +
               '" alt="' +
               esc(p.name) +
@@ -557,14 +561,12 @@
 
           document.getElementById('art-hero').innerHTML = heroHTML(a, cat, auth, cfg);
           document.getElementById('art-layout').innerHTML =
-            '<aside class="pg-toc-rail" aria-label="Table of contents">' +
-            tocHTML(items) +
-            '</aside>' +
             '<main class="pg-art-main"><div class="pg-art-card"><img class="pg-feat" src="' +
             esc(a.image) +
             '" alt="' +
             esc(a.imageAlt || a.title) +
             '" onerror="this.style.display=\'none\'" />' +
+            tocHTML(items) +
             '<article class="article-body" id="pg-body">' +
             bodyHTML(parts.body, cfg, cat) +
             '</article>' +
