@@ -162,24 +162,9 @@
             (a.readingTime || 5) +
             ' min</b> read</span></div>' +
             '<div class="pg-art-actions">' +
-            '<div class="pg-dd" id="pg-dd"><button class="pgb pgb--primary" type="button" id="pg-dd-btn" aria-haspopup="true" aria-expanded="false">' +
+            '<button class="pgb pgb--primary" type="button" data-open-lead="Download Curriculum">' +
             PG.I.dl +
-            ' Download Free Resources ' +
-            PG.svg('<polyline points="6 9 12 15 18 9"/>', 15) +
-            '</button>' +
-            '<div class="pg-dd-menu" role="menu">' +
-            '<button type="button" role="menuitem" data-open-lead="Download Curriculum">' +
-            PG.svg(
-              '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
-              17,
-            ) +
-            ' Download Curriculum</button>' +
-            '<button type="button" role="menuitem" data-open-lead="Download Placement Report">' +
-            PG.svg(
-              '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
-              17,
-            ) +
-            ' Download Placement Report</button></div></div>' +
+            ' Download Free Resources</button>' +
             course +
             google +
             '</div></div>'
@@ -269,19 +254,18 @@
             all.filter(function (x) {
               return x.id !== auth.id;
             })[0] || auth;
+          var AUTHOR_URL = 'author/anjali-verma.html';
           function card(label, p, role, cls) {
             return (
-              '<div class="pg-author ' +
-              cls +
-              '"><img src="' +
+              '<div class="pg-author ' + cls + '"><a class="pg-author-img" href="' + AUTHOR_URL + '" aria-label="View ' + esc(p.name) + ' profile"><img src="' +
               esc(p.avatar) +
               '" alt="' +
               esc(p.name) +
-              '" loading="lazy" onerror="this.src=\'assets/images/authors/default.svg\'" /><div class="pg-author-t"><small>' +
+              '" loading="lazy" onerror="this.src=\'assets/images/authors/default.svg\'" /></a><div class="pg-author-t"><small>' +
               label +
-              '</small><b>' +
+              '</small><b><a href="' + AUTHOR_URL + '">' +
               esc(p.name) +
-              '</b><div class="role">' +
+              '</a></b><div class="role">' +
               esc(role) +
               '</div>' +
               (cls === 'is-main' ? '<p>' + esc(p.bio) + '</p>' : '') +
